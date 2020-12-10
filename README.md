@@ -39,7 +39,7 @@ var options = {
 var ldclient = LDClient.initialize('test-client-*************', user, options);
 ```
 
-8. Wait for the client to get ready 
+8. Wait for the client to get ready. Use variation method to get the variation
 
 ```javascript
 ldclient.on('ready', function() {
@@ -55,4 +55,9 @@ ldclient.on('ready', function() {
     console.log("Hello. Js Flag is off");
 
   }
+```
+9. To get variation configuration use variantConfig method
+
+```javascript
+var varConf = ldclient.variantConfig("js-flag", variation);
 ```
