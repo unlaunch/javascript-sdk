@@ -260,38 +260,52 @@ export function initialize(env, user, specifiedOptions, platform, extraOptionDef
       detail = getFlagDetail(flag);
       if (flag.result === null || flag.result === undefined) {
           detail.value = defaultValue;
+      } 
+
+      if (sendEvent) {
+        sendFlagEvent(key, detail, defaultValue, includeReasonInEvent);
       }
+      
+      return detail;
+      
     } else {
-     
+      
         console.log("sending request to server for flag key ", key)
-        requestor
-        .fetchFlagsWithResult(ident.getUser(), key)
-        .then(result => {
+
+        let fetchPromise = requestor
+          .fetchFlagsWithResult(ident.getUser(), key);
+              
+        let fetchFlagResult = function(){ 
+          fetchPromise.then(result => {
+         
           result.data.flags.forEach(
             flag => {
               flags[flag.flagKey] = flag;
             }
           )
+          const flag = flags[key];
+          detail = getFlagDetail(flag);
+        
+          if (flag.result === null || flag.result === undefined) {
+              detail.value = defaultValue;
+          } 
+          if (sendEvent) {
+            sendFlagEvent(key, detail, defaultValue, includeReasonInEvent);
+          }
+     
+          return detail;
         })
         .catch(err => {
-          console.log("we are in error ")
-           flags = flags;
+          console.log("Error ", err)
+          detail = { value: defaultValue, variationIndex: null, reason: { kind: 'ERROR', errorKind: 'FLAG_NOT_FOUND' } };
+          flags = flags;
+          return detail;
         });
-   
-      const flag = flags[key];
-      detail = getFlagDetail(flag);
-      if (flag.result === null || flag.result === undefined) {
-          detail.value = defaultValue;
-      } else{
-        detail = { value: defaultValue, variationIndex: null, reason: { kind: 'ERROR', errorKind: 'FLAG_NOT_FOUND' } };
       }
-    }
 
-    if (sendEvent) {
-      sendFlagEvent(key, detail, defaultValue, includeReasonInEvent);
+      return fetchFlagResult();
+     
     }
-
-    return detail;
   }
 
   function getFlagDetail(flag) {
@@ -305,6 +319,8 @@ export function initialize(env, user, specifiedOptions, platform, extraOptionDef
     // undefined if we don't have values for them. That's just to avoid subtle errors that depend on
     // whether an object was JSON-encoded with null properties omitted or not.
   }
+
+  
 
   function allFlags() {
     const results = {};

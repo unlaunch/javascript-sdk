@@ -1,8 +1,8 @@
 {
-  "name": "launchdarkly-js-sdk-common",
-  "version": "3.2.11",
-  "description": "LaunchDarkly SDK for JavaScript - common code",
-  "author": "LaunchDarkly <team@launchdarkly.com>",
+  "name": "js-sdk-common",
+  "version": "1.0.0",
+  "description": "Unlaunch SDK for JavaScript - common code",
+  "author": "Unlaunch <unlaunch@gmail.com>",
   "license": "Apache-2.0",
   "files": [
     "ldclient-common.cjs.js",
