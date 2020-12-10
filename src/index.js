@@ -320,7 +320,34 @@ export function initialize(env, user, specifiedOptions, platform, extraOptionDef
     // whether an object was JSON-encoded with null properties omitted or not.
   }
 
-  
+  function variantConfig(flagKey, variationKey) {
+    if (!inited) {
+        logger.error('client not initialized');
+        return undefined;
+    } else if (!flagKey || flagKey.length === 0) {
+        logger.error('flag key is missing');
+        return undefined;
+    } else if (!variationKey || variationKey.length === 0) {
+        logger.error('variation key is missing');
+        return undefined;
+    }
+
+    let flag = flags[flagKey];
+    
+    if (flag === undefined) {
+        logger.error('flag not found. call variation to load flag from server');
+        return undefined;
+    } else { 
+        let variation = flag.result === variationKey;
+        
+        if (!variation) {
+            logger.error(`Variation key ${variationKey} not found!`);
+            return undefined;
+        }
+        
+        return flag.variantConfig
+    }
+}
 
   function allFlags() {
     const results = {};
@@ -744,6 +771,7 @@ export function initialize(env, user, specifiedOptions, platform, extraOptionDef
     getUser: getUser,
     variation: variation,
     variationDetail: variationDetail,
+    variantConfig: variantConfig,
     track: track,
     on: on,
     off: off,
