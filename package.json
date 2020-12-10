@@ -1,11 +1,11 @@
 {
-  "name": "launchdarkly-js-client-sdk",
+  "name": "js-client-sdk",
   "version": "2.18.3",
-  "description": "LaunchDarkly SDK for JavaScript",
-  "author": "LaunchDarkly <team@launchdarkly.com>",
+  "description": "UnLaunch SDK for JavaScript",
+  "author": "Unlaunch <unlaunch@gmail.com>",
   "license": "Apache-2.0",
   "keywords": [
-    "launchdarkly",
+    "unlaunch",
     "analytics",
     "client"
   ],
@@ -80,6 +80,7 @@
   },
   "dependencies": {
     "escape-string-regexp": "^1.0.5",
+    "js-sdk-common": "file:../js-sdk-common",
     "launchdarkly-js-sdk-common": "file:../js-sdk-common"
   },
   "repository": {
