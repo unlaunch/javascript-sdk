@@ -32,6 +32,7 @@ export function initialize(env, user, specifiedOptions, platform, extraOptionDef
   const initializationStateTracker = InitializationStateTracker(emitter);
   const options = configuration.validate(specifiedOptions, emitter, extraOptionDefs, logger);
   const sendEvents = options.sendEvents;
+  const offline = options.offline;
   let environment = env;
   let hash = options.hash;
 
@@ -255,6 +256,11 @@ export function initialize(env, user, specifiedOptions, platform, extraOptionDef
   function variationDetailInternal(key, defaultValue, sendEvent, includeReasonInEvent) {
     let detail;
 
+    if(offline){
+      detail = { value: defaultValue, variationIndex: null, reason: { kind: 'OFFLINE', desc: 'DEFAULT_VALUE_SERVED' } };
+      return detail;
+    }
+    
     if (flags && utils.objectHasOwnProperty(flags, key) && flags[key] && !flags[key].deleted) {
       const flag = flags[key];
       detail = getFlagDetail(flag);
@@ -320,10 +326,13 @@ export function initialize(env, user, specifiedOptions, platform, extraOptionDef
     // whether an object was JSON-encoded with null properties omitted or not.
   }
 
-  function variantConfig(flagKey, variationKey) {
+  function variantConfig(flagKey, variationKey, variantConfig = {}) {
     if (!inited) {
         logger.error('client not initialized');
         return undefined;
+    } else if(offline){
+      console.log('default variantConfig returned in offline mode');
+      return variantConfig;
     } else if (!flagKey || flagKey.length === 0) {
         logger.error('flag key is missing');
         return undefined;
@@ -393,6 +402,12 @@ export function initialize(env, user, specifiedOptions, platform, extraOptionDef
   }
 
   function connectStream() {
+    
+    if(offline){
+      log.info("Stream not available in offline mode");
+      return;
+    }
+
     streamActive = true;
     if (!ident.getUser()) {
       return;
@@ -628,7 +643,10 @@ export function initialize(env, user, specifiedOptions, platform, extraOptionDef
       } else if (useLocalStorage) {
         console.log("finishInitWithLocalStorage");
         return finishInitWithLocalStorage();
-      } else {
+      } else if(offline){
+        flags = {}
+        return signalSuccessfulInit();
+     } else {
        // return finishInitWithPolling();
        console.log("finishInitWithFlagsResult");
        return finishInitWithFlagsResult(options.flagKeys);

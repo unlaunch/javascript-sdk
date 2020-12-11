@@ -19,6 +19,7 @@ export const baseOptionDefs = {
   streamUrl: { default: 'https://api-qa.unlaunch.io/api/v1' },
   eventsUrl: { default: 'https://api-qa.unlaunch.io/api/v1' },
   flagKeys: { default: []},
+  offline: {default: false},
   sendEvents: { default: false },
   streaming: { type: 'boolean' }, // default for this is undefined, which is different from false
   sendLDHeaders: { default: false },
