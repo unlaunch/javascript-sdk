@@ -26,14 +26,14 @@ const internalChangeEvent = 'internal-change';
 //
 // For definitions of the API in the platform object, see stubPlatform.js in the test code.
 
-export function initialize(env, user, specifiedOptions, platform, extraOptionDefs) {
+export function initialize(clientSdkKey, user, specifiedOptions, platform, extraOptionDefs) {
   const logger = createLogger();
   const emitter = EventEmitter(logger);
   const initializationStateTracker = InitializationStateTracker(emitter);
   const options = configuration.validate(specifiedOptions, emitter, extraOptionDefs, logger);
   const sendEvents = options.sendEvents;
   const offline = options.offline;
-  let environment = env;
+  let environment = clientSdkKey;
   let hash = options.hash;
 
   const eventSender = EventSender(platform, environment, options);
@@ -75,7 +75,8 @@ export function initialize(env, user, specifiedOptions, platform, extraOptionDef
   //   be responsible for delivering it, or false if we still should deliver it ourselves.
   const stateProvider = options.stateProvider;
 
-  const ident = Identity(null, sendIdentifyEvent);
+  //const ident = Identity(null, sendIdentifyEvent);
+  const ident = Identity(null, null);
   const userValidator = UserValidator(platform.localStorage, logger);
   let store;
   if (platform.localStorage) {
@@ -130,7 +131,7 @@ export function initialize(env, user, specifiedOptions, platform, extraOptionDef
     if (stateProvider && stateProvider.enqueueEvent && stateProvider.enqueueEvent(event)) {
       return; // it'll be handled elsewhere
     }
-    if (!event.user) {
+    if (!event.user && !event.userId) {
       if (firstEvent) {
         logger.warn(messages.eventWithoutUser());
         firstEvent = false;
@@ -139,8 +140,8 @@ export function initialize(env, user, specifiedOptions, platform, extraOptionDef
     }
     firstEvent = false;
     if (shouldEnqueueEvent()) {
-      logger.debug(messages.debugEnqueueingEvent(event.kind));
-      events.enqueue(event);
+      //logger.debug(messages.debugEnqueueingEvent(event.kind));
+        events.enqueue(event);
     }
   }
 
@@ -195,6 +196,50 @@ export function initialize(env, user, specifiedOptions, platform, extraOptionDef
     enqueueEvent(event);
   }
 
+
+  function sendImpressionEvent(key, detail) {
+    console.log("sending impression event for flag", key);
+    const user = ident.getUser();
+    const now = new Date();
+    const value = detail ? detail.value : null;
+    // if (!options.allowFrequentDuplicateEvents) {
+    //   const cacheKey = JSON.stringify(value) + (user && user.key ? user.key : '') + key; // see below
+    //   const cached = seenRequests[cacheKey];
+    //   // cache TTL is five minutes
+    //   if (cached && now - cached < 300000) {
+    //     return;
+    //   }
+    //   seenRequests[cacheKey] = now;
+    // }
+
+    const event = {
+      createdTime: now.getTime(),
+      type: 'IMPRESSION',
+      sdk: 'Javascript',
+      sdkVersion: '1.0.0',
+      flagKey: key,
+      userId: user.key,
+      //value: value,
+      variationKey: value,
+      flagStatus: detail.status,
+      evaluationReason: detail.reason,
+      machineIp: 'machine ip',
+      machineName: 'machine name'
+      
+    };
+    // const flag = flags[key];
+    // if (flag) {
+    //   event.version = flag.flagVersion ? flag.flagVersion : flag.version;
+    //   event.trackEvents = flag.trackEvents;
+    //   event.debugEventsUntilDate = flag.debugEventsUntilDate;
+    // }
+    // if ((includeReason || (flag && flag.trackReason)) && detail) {
+    //   event.reason = detail.reason;
+    // }
+
+    enqueueEvent(event);
+  }
+  
   function identify(user, newHash, onDone) {
     if (closed) {
       return utils.wrapPromiseCallback(Promise.resolve({}), onDone);
@@ -257,7 +302,7 @@ export function initialize(env, user, specifiedOptions, platform, extraOptionDef
     let detail;
 
     if(offline){
-      detail = { value: defaultValue, variationIndex: null, reason: { kind: 'OFFLINE', desc: 'DEFAULT_VALUE_SERVED' } };
+      detail = { value: defaultValue, variationIndex: null, reason: 'DEFAULT_VALUE_SERVED'};
       return detail;
     }
     
@@ -269,47 +314,50 @@ export function initialize(env, user, specifiedOptions, platform, extraOptionDef
       } 
 
       if (sendEvent) {
-        sendFlagEvent(key, detail, defaultValue, includeReasonInEvent);
+        //sendFlagEvent(key, detail, defaultValue, includeReasonInEvent);
+          sendImpressionEvent(key, detail);
       }
       
       return detail;
       
     } else {
       
-        console.log("sending request to server for flag key ", key)
+       logger.error("flag is not initialized. Please add flag key in initialize", key);
+       return;
+      //   console.log("sending request to server for flag key ", key)
 
-        let fetchPromise = requestor
-          .fetchFlagsWithResult(ident.getUser(), key);
+      //   let fetchPromise = requestor
+      //     .fetchFlagsWithResult(ident.getUser(), key);
               
-        let fetchFlagResult = function(){ 
-          fetchPromise.then(result => {
+      //   let fetchFlagResult = function(){ 
+      //     fetchPromise.then(result => {
          
-          result.data.flags.forEach(
-            flag => {
-              flags[flag.flagKey] = flag;
-            }
-          )
-          const flag = flags[key];
-          detail = getFlagDetail(flag);
+      //     result.data.flags.forEach(
+      //       flag => {
+      //         flags[flag.flagKey] = flag;
+      //       }
+      //     )
+      //     const flag = flags[key];
+      //     detail = getFlagDetail(flag);
         
-          if (flag.result === null || flag.result === undefined) {
-              detail.value = defaultValue;
-          } 
-          if (sendEvent) {
-            sendFlagEvent(key, detail, defaultValue, includeReasonInEvent);
-          }
+      //     if (flag.result === null || flag.result === undefined) {
+      //         detail.value = defaultValue;
+      //     } 
+      //     if (sendEvent) {
+      //       sendFlagEvent(key, detail, defaultValue, includeReasonInEvent);
+      //     }
      
-          return detail;
-        })
-        .catch(err => {
-          console.log("Error ", err)
-          detail = { value: defaultValue, variationIndex: null, reason: { kind: 'ERROR', errorKind: 'FLAG_NOT_FOUND' } };
-          flags = flags;
-          return detail;
-        });
-      }
+      //     return detail;
+      //   })
+      //   .catch(err => {
+      //     console.log("Error ", err)
+      //     detail = { value: defaultValue, variationIndex: null, reason: { kind: 'ERROR', errorKind: 'FLAG_NOT_FOUND' } };
+      //     flags = flags;
+      //     return detail;
+      //   });
+      // }
 
-      return fetchFlagResult();
+      // return fetchFlagResult();
      
     }
   }
@@ -317,7 +365,7 @@ export function initialize(env, user, specifiedOptions, platform, extraOptionDef
   function getFlagDetail(flag) {
     return {
       value: flag.result,
-      type : flag.type,
+      status: flag.status,
       variationIndex: flag.variation === undefined ? null : flag.variation,
       reason: flag.reason || null,
     };
@@ -632,7 +680,7 @@ export function initialize(env, user, specifiedOptions, platform, extraOptionDef
   }
 
   function finishInit() {
-    if (!env) {
+    if (!clientSdkKey) {
       return Promise.reject(new errors.LDInvalidEnvironmentIdError(messages.environmentNotSpecified()));
     }
     return userValidator.validateUser(user).then(realUser => {

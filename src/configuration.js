@@ -20,9 +20,9 @@ export const baseOptionDefs = {
   eventsUrl: { default: 'https://api-qa.unlaunch.io/api/v1' },
   flagKeys: { default: []},
   offline: {default: false},
-  sendEvents: { default: false },
+  sendEvents: { default: true },
   streaming: { type: 'boolean' }, // default for this is undefined, which is different from false
-  sendLDHeaders: { default: false },
+  sendLDHeaders: { default: true },
   inlineUsersInEvents: { default: false },
   allowFrequentDuplicateEvents: { default: false },
   sendEventsOnlyForVariation: { default: false },
@@ -36,7 +36,7 @@ export const baseOptionDefs = {
   privateAttributeNames: { default: [] },
   bootstrap: { type: 'string|object' },
   diagnosticRecordingInterval: { default: 900000, minimum: 2000 },
-  diagnosticOptOut: { default: false },
+  diagnosticOptOut: { default: true },
   wrapperName: { type: 'string' },
   wrapperVersion: { type: 'string' },
   stateProvider: { type: 'object' }, // not a public option, used internally

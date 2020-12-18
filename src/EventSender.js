@@ -6,7 +6,7 @@ const MAX_URL_LENGTH = 2000;
 
 export default function EventSender(platform, environmentId, options) {
   const imageUrlPath = '/a/' + environmentId + '.gif';
-  const baseHeaders = utils.extend({ 'Content-Type': 'application/json' }, utils.getLDHeaders(platform, options));
+  const baseHeaders = utils.extend({ 'Content-Type': 'application/json' }, utils.getULHeaders(platform, options, environmentId));
   const httpFallbackPing = platform.httpFallbackPing; // this will be set for us if we're in the browser SDK
   const sender = {};
 
@@ -27,12 +27,14 @@ export default function EventSender(platform, environmentId, options) {
     const payloadId = isDiagnostic ? null : uuidv1();
 
     function doPostRequest(canRetry) {
-      const headers = isDiagnostic
-        ? baseHeaders
-        : utils.extend({}, baseHeaders, {
-            'X-LaunchDarkly-Event-Schema': '3',
-            'X-LaunchDarkly-Payload-ID': payloadId,
-          });
+      // const headers = isDiagnostic
+      //   ? baseHeaders
+      //   : utils.extend({}, baseHeaders, {
+      //       'X-LaunchDarkly-Event-Schema': '3',
+      //       'X-LaunchDarkly-Payload-ID': payloadId,
+      //     });
+      const headers = baseHeaders;
+
       return platform
         .httpRequest('POST', url, headers, jsonBody)
         .promise.then(result => {

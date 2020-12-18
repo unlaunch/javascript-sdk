@@ -165,6 +165,17 @@ export function getLDHeaders(platform, options) {
   return h;
 }
 
+export function getULHeaders(platform, options, clientSdkKey) {
+  if (options && !options.sendLDHeaders) {
+    return {};
+  }
+  const h = {
+    'X-Api-Key': clientSdkKey,
+  };
+  
+  return h;
+}
+
 export function extend(...objects) {
   return objects.reduce((acc, obj) => ({ ...acc, ...obj }), {});
 }

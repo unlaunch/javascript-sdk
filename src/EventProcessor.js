@@ -15,7 +15,9 @@ export default function EventProcessor(
 ) {
   const processor = {};
   const eventSender = sender || EventSender(platform, environmentId, options);
-  const mainEventsUrl = options.eventsUrl + '/events/bulk/' + environmentId;
+  //const mainEventsUrl = options.eventsUrl + '/events/bulk/' + environmentId;
+  const impressionEventsUrl = options.eventsUrl + '/impressions'
+  const varCountEventsUrl = options.eventsUrl + '/events'
   const summarizer = EventSummarizer();
   const userFilter = UserFilter(options);
   const inlineUsers = options.inlineUsersInEvents;
@@ -84,6 +86,13 @@ export default function EventProcessor(
     let addFullEvent = false;
     let addDebugEvent = false;
 
+    if (event.type === 'IMPRESSION'){
+      // aggregate variation counts
+      summarizer.summarizeEvent(event);
+      addToOutbox(event);
+      return;
+    }
+
     // Add event to the summary counters if appropriate
     summarizer.summarizeEvent(event);
 
@@ -115,24 +124,24 @@ export default function EventProcessor(
       return Promise.resolve();
     }
     const eventsToSend = queue;
-    const summary = summarizer.getSummary();
-    summarizer.clearSummary();
-    if (summary) {
-      summary.kind = 'summary';
-      eventsToSend.push(summary);
-    }
-    if (diagnosticsAccumulator) {
-      // For diagnostic events, we record how many events were in the queue at the last flush (since "how
-      // many events happened to be in the queue at the moment we decided to send a diagnostic event" would
-      // not be a very useful statistic).
-      diagnosticsAccumulator.setEventsInLastBatch(eventsToSend.length);
-    }
+    // const summary = summarizer.getSummary();
+    // summarizer.clearSummary();
+    // if (summary) {
+    //   summary.kind = 'summary';
+    //   eventsToSend.push(summary);
+    // }
+    // if (diagnosticsAccumulator) {
+    //   // For diagnostic events, we record how many events were in the queue at the last flush (since "how
+    //   // many events happened to be in the queue at the moment we decided to send a diagnostic event" would
+    //   // not be a very useful statistic).
+    //   diagnosticsAccumulator.setEventsInLastBatch(eventsToSend.length);
+    // }
     if (eventsToSend.length === 0) {
       return Promise.resolve();
     }
     queue = [];
     logger.debug(messages.debugPostingEvents(eventsToSend.length));
-    return eventSender.sendEvents(eventsToSend, mainEventsUrl).then(responseInfo => {
+    return eventSender.sendEvents(eventsToSend, impressionEventsUrl).then(responseInfo => {
       if (responseInfo) {
         if (responseInfo.serverTime) {
           lastKnownPastTime = responseInfo.serverTime;
