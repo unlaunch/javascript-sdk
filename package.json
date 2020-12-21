@@ -1,6 +1,6 @@
 {
   "name": "js-client-sdk",
-  "version": "2.18.3",
+  "version": "1.0.0",
   "description": "UnLaunch SDK for JavaScript",
   "author": "Unlaunch <unlaunch@gmail.com>",
   "license": "Apache-2.0",

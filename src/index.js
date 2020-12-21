@@ -1,4 +1,4 @@
-import * as common from 'launchdarkly-js-sdk-common';
+import * as common from 'js-sdk-common';
 import browserPlatform from './browserPlatform';
 import GoalManager from './GoalManager';
 
@@ -12,9 +12,13 @@ const extraOptionDefs = {
 };
 
 // Pass our platform object to the common code to create the browser version of the client
-export function initialize(env, user, options = {}) {
+export function initialize(clientSdkKey, flagKeys, identity, attributes = {}, options = {}) {
   const platform = browserPlatform(options);
-  const clientVars = common.initialize(env, user, options, platform, extraOptionDefs);
+  let user = {
+    'identity': identity,
+    'attributes': attributes 
+  }
+  const clientVars = common.initialize(clientSdkKey, flagKeys, user, options, platform, extraOptionDefs);
 
   const client = clientVars.client;
   const validatedOptions = clientVars.options;
