@@ -12,13 +12,9 @@ import * as utils from './utils';
 //
 // The extraOptionDefs parameter to validate() uses the same format.
 export const baseOptionDefs = {
-  //baseUrl: { default: 'https://app.launchdarkly.com' },
-  // streamUrl: { default: 'https://clientstream.launchdarkly.com' },
-  // eventsUrl: { default: 'https://events.launchdarkly.com' },
   baseUrl: { default: 'https://api-qa.unlaunch.io/api/v1' },
   streamUrl: { default: 'https://api-qa.unlaunch.io/api/v1' },
   eventsUrl: { default: 'https://api-qa.unlaunch.io/api/v1' },
-  flagKeys: { default: []},
   offline: {default: false},
   sendEvents: { default: true },
   streaming: { type: 'boolean' }, // default for this is undefined, which is different from false
@@ -27,7 +23,7 @@ export const baseOptionDefs = {
   allowFrequentDuplicateEvents: { default: false },
   sendEventsOnlyForVariation: { default: false },
   useReport: { default: false },
-  evaluationReasons: { default: false },
+  evaluationReason: { default: false },
   eventCapacity: { default: 100, minimum: 1 },
   flushInterval: { default: 2000, minimum: 2000 },
   samplingInterval: { default: 0, minimum: 0 },

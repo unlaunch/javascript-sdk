@@ -6,33 +6,93 @@ export default function EventSummarizer() {
     counters = {};
 
   es.summarizeEvent = function(event) {
-    if (event.kind === 'feature') {
+    
+    if (event.type === 'IMPRESSION') {
       const counterKey =
-        event.key +
-        ':' +
-        (event.variation !== null && event.variation !== undefined ? event.variation : '') +
-        ':' +
-        (event.version !== null && event.version !== undefined ? event.version : '');
+        event.flagKey + ':' + event.variationKey;
+        // ':' +
+        // (event.version !== null && event.version !== undefined ? event.version : '');
       const counterVal = counters[counterKey];
       if (counterVal) {
         counterVal.count = counterVal.count + 1;
+        counters[counterKey] = counterVal;
       } else {
         counters[counterKey] = {
           count: 1,
-          key: event.key,
-          variation: event.variation,
-          version: event.version,
-          value: event.value,
-          default: event.default,
+          createdTime: event.createdTime,
+          type: 'VARIATIONS_COUNT_EVENT',
+          sdk: event.sdk,
+          sdkVersion: event.sdkVersion,
+          flagKey: event.flagKey,
+          userId: event.userId,
+          variationKey: event.variationKey,
+          flagStatus: event.flagStatus,
+          evaluationReason: event.evaluationReason,
+          machineIp: event.machineIp,
+          machineName: event.machineName
+          
         };
       }
-      if (startDate === 0 || event.creationDate < startDate) {
-        startDate = event.creationDate;
-      }
-      if (event.creationDate > endDate) {
-        endDate = event.creationDate;
-      }
+      // if (startDate === 0 || event.creationDate < startDate) {
+      //   startDate = event.creationDate;
+      // }
+      // if (event.creationDate > endDate) {
+      //   endDate = event.creationDate;
+      // }
     }
+  };
+
+  es.getVariationCountEvents = function() {
+
+    const variationCountEvents = [] 
+    const eventsOut = {};
+    let empty = true;
+    for (const i in counters) {
+      const c = counters[i];
+      let event = eventsOut[c.flagKey];
+      if (!event) {
+        // event = {
+        //   default: c.default,
+        //   counters: [],
+        // };
+        let variationKey = c.variationKey
+       
+        event = {
+          
+          createdTime: c.createdTime,
+          type: c.type,
+          sdk: c.sdk,
+          sdkVersion: c.sdkVersion,
+          key: c.flagKey,
+          //userId: c.userId,
+          //variationKey: c.variationKey,
+          flagStatus: c.flagStatus,
+          evaluationReason: c.evaluationReason,
+          //machineIp: c.machineIp,
+         // machineName: c.machineName,
+          properties: {}
+          
+        };
+        event.properties[variationKey] = c.count
+        eventsOut[c.flagKey] = event;
+      }else{
+        event.properties[c.variationKey] = c.count
+      }
+      // if (c.variation !== undefined && c.variation !== null) {
+      //   counterOut.variation = c.variation;
+      // }
+     
+      //event.properties.push(varCount);
+     // eventsOut.push(event);
+      empty = false;
+    }
+   
+    for (const x in eventsOut) {
+      variationCountEvents.push(eventsOut[x]);
+    }
+    return empty
+      ? null
+      : variationCountEvents;
   };
 
   es.getSummary = function() {

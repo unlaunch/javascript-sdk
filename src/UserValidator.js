@@ -40,18 +40,18 @@ export default function UserValidator(localStorageProvider, logger) {
     }
 
     const userOut = utils.clone(user);
-    if (userOut.key !== null && userOut.key !== undefined) {
-      userOut.key = userOut.key.toString();
+    if (userOut.identity !== null && userOut.identity !== undefined) {
+      userOut.identity = userOut.identity.toString();
       return Promise.resolve(userOut);
     }
     if (userOut.anonymous) {
       return getCachedUserId().then(cachedId => {
         if (cachedId) {
-          userOut.key = cachedId;
+          userOut.identity = cachedId;
           return userOut;
         } else {
           const id = uuidv1();
-          userOut.key = id;
+          userOut.identity = id;
           return setCachedUserId(id).then(() => userOut);
         }
       });

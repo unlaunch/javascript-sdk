@@ -89,12 +89,14 @@ export default function EventProcessor(
     if (event.type === 'IMPRESSION'){
       // aggregate variation counts
       summarizer.summarizeEvent(event);
+
+      // added in queue for livetail
       addToOutbox(event);
       return;
     }
 
     // Add event to the summary counters if appropriate
-    summarizer.summarizeEvent(event);
+    //summarizer.summarizeEvent(event);
 
     // Decide whether to add the event to the payload. Feature events may be added twice, once for
     // the event (if tracked) and once for debugging.
@@ -162,9 +164,45 @@ export default function EventProcessor(
     });
   };
 
+  processor.flushVariationCountEvents = function() {
+    if (disabled) {
+      return Promise.resolve();
+    }
+    
+    const variationCountEvents = summarizer.getVariationCountEvents();
+   
+    summarizer.clearSummary();
+  
+    if (!variationCountEvents || variationCountEvents.length === 0) {
+      return Promise.resolve();
+    }
+    queue = [];
+    logger.debug(messages.debugPostingEvents(variationCountEvents.length));
+    return eventSender.sendEvents(variationCountEvents, varCountEventsUrl).then(responseInfo => {
+      if (responseInfo) {
+        if (responseInfo.serverTime) {
+          lastKnownPastTime = responseInfo.serverTime;
+        }
+        if (!errors.isHttpErrorRecoverable(responseInfo.status)) {
+          disabled = true;
+        }
+        if (responseInfo.status >= 400) {
+          utils.onNextTick(() => {
+            emitter.maybeReportError(
+              new errors.LDUnexpectedResponseError(
+                messages.httpErrorMessage(responseInfo.status, 'event posting', 'some events were dropped')
+              )
+            );
+          });
+        }
+      }
+    });
+  };
+
   processor.start = function() {
     const flushTick = () => {
       processor.flush();
+      processor.flushVariationCountEvents();
       flushTimer = setTimeout(flushTick, flushInterval);
     };
     flushTimer = setTimeout(flushTick, flushInterval);

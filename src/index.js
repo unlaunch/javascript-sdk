@@ -26,7 +26,7 @@ const internalChangeEvent = 'internal-change';
 //
 // For definitions of the API in the platform object, see stubPlatform.js in the test code.
 
-export function initialize(clientSdkKey, user, specifiedOptions, platform, extraOptionDefs) {
+export function initialize(clientSdkKey, flagKeys, user, specifiedOptions, platform, extraOptionDefs) {
   const logger = createLogger();
   const emitter = EventEmitter(logger);
   const initializationStateTracker = InitializationStateTracker(emitter);
@@ -218,7 +218,7 @@ export function initialize(clientSdkKey, user, specifiedOptions, platform, extra
       sdk: 'Javascript',
       sdkVersion: '1.0.0',
       flagKey: key,
-      userId: user.key,
+      userId: user.identity,
       //value: value,
       variationKey: value,
       flagStatus: detail.status,
@@ -290,17 +290,17 @@ export function initialize(clientSdkKey, user, specifiedOptions, platform, extra
     return utils.wrapPromiseCallback(sendEvents ? events.flush() : Promise.resolve(), onDone);
   }
 
-  function variation(key, defaultValue) {
-    return variationDetailInternal(key, defaultValue, true, false).value;
+  function variation(key) {
+    return variationDetailInternal(key, true, false).value;
   }
 
-  function variationDetail(key, defaultValue) {
-    return variationDetailInternal(key, defaultValue, true, true);
+  function variationDetail(key) {
+    return variationDetailInternal(key, true, true);
   }
 
-  function variationDetailInternal(key, defaultValue, sendEvent, includeReasonInEvent) {
+  function variationDetailInternal(key, sendEvent, includeReasonInEvent) {
     let detail;
-
+    let defaultValue = 'control';
     if(offline){
       detail = { value: defaultValue, variationIndex: null, reason: 'DEFAULT_VALUE_SERVED'};
       return detail;
@@ -367,7 +367,7 @@ export function initialize(clientSdkKey, user, specifiedOptions, platform, extra
       value: flag.result,
       status: flag.status,
       variationIndex: flag.variation === undefined ? null : flag.variation,
-      reason: flag.reason || null,
+      reason: flag.evaluationReason || null,
     };
     // Note, the logic above ensures that variationIndex and reason will always be null rather than
     // undefined if we don't have values for them. That's just to avoid subtle errors that depend on
@@ -697,7 +697,7 @@ export function initialize(clientSdkKey, user, specifiedOptions, platform, extra
      } else {
        // return finishInitWithPolling();
        console.log("finishInitWithFlagsResult");
-       return finishInitWithFlagsResult(options.flagKeys);
+       return finishInitWithFlagsResult(flagKeys);
       }
     });
   }

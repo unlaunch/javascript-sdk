@@ -58,6 +58,7 @@ export default function Requestor(platform, options, environment) {
             result.header('content-type') &&
             result.header('content-type').substring(0, jsonContentType.length) === jsonContentType
           ) {
+            console.log("Result recieved" , result.body);
             return JSON.parse(result.body);
           } else {
             const message = messages.invalidContentType(result.header('content-type') || '');
@@ -112,7 +113,8 @@ export default function Requestor(platform, options, environment) {
  
   requestor.fetchFlagsWithResult = function(user, flagKeys) {
     console.log("evaluate", user, flagKeys);
-    let endpoint = [baseUrl, '/evaluate/', environment].join('');
+    let endpoint = [baseUrl, '/evaluate/', environment].join('') + '?evaluationReason=' + options.evaluationReason;
+    
     let body = getRequestBody(flagKeys, user);
     
     body = JSON.stringify(body);
@@ -128,12 +130,13 @@ export default function Requestor(platform, options, environment) {
 
     requestUser.flagKeys = flagKeys.toString();
 
-    requestUser.id = user.id || _getUUIDv4();
+    requestUser.id = user.identity || _getUUIDv4();
 
-    for (const attr in user) {
-        if (attr != "id") {
-            requestUser.attributes[attr] = user[attr];
-        }
+    let attributes = user.attributes;
+    for (const attr in attributes) {
+       // if (attr != "id") {
+            requestUser.attributes[attr] = attributes[attr];
+       // }
     }
   
     return requestUser;
