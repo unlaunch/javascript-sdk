@@ -198,7 +198,6 @@ export function initialize(clientSdkKey, flagKeys, user, specifiedOptions, platf
 
 
   function sendImpressionEvent(key, detail) {
-    console.log("sending impression event for flag", key);
     const user = ident.getUser();
     const now = new Date();
     const value = detail ? detail.value : null;
@@ -533,29 +532,41 @@ export function initialize(clientSdkKey, flagKeys, user, specifiedOptions, platf
   // dispatched all change events, and updated local storage if appropriate. This Promise is guaranteed
   // never to have an unhandled rejection.
   function replaceAllFlags(newFlags) {
-    const changes = {};
+    const updatedFlags = {};
 
     if (!newFlags) {
       return Promise.resolve();
     }
 
-    for (const key in flags) {
-      if (utils.objectHasOwnProperty(flags, key) && flags[key]) {
-        if (newFlags[key] && !utils.deepEquals(newFlags[key].value, flags[key].value)) {
-          changes[key] = { previous: flags[key].value, current: getFlagDetail(newFlags[key]) };
-        } else if (!newFlags[key] || newFlags[key].deleted) {
-          changes[key] = { previous: flags[key].value };
-        }
+    newFlags.forEach(flag => {
+        updatedFlags[flag.flagKey] = flag;
       }
-    }
-    for (const key in newFlags) {
-      if (utils.objectHasOwnProperty(newFlags, key) && newFlags[key] && (!flags[key] || flags[key].deleted)) {
-        changes[key] = { current: getFlagDetail(newFlags[key]) };
-      }
+    )
+    flags = { ...updatedFlags};
+   
+    if (useLocalStorage && store) {
+      return store.saveFlags(flags).catch(() => null); // disregard errors
+    } else {
+      return Promise.resolve();
     }
 
-    flags = { ...newFlags };
-    return handleFlagChanges(changes).catch(() => {}); // swallow any exceptions from this Promise
+    // for (const key in flags) {
+    //   if (utils.objectHasOwnProperty(flags, key) && flags[key]) {
+    //     if (newFlags[key] && !utils.deepEquals(newFlags[key].value, flags[key].value)) {
+    //       changes[key] = { previous: flags[key].value, current: getFlagDetail(newFlags[key]) };
+    //     } else if (!newFlags[key] || newFlags[key].deleted) {
+    //       changes[key] = { previous: flags[key].value };
+    //     }
+    //   }
+    // }
+    // for (const key in newFlags) {
+    //   if (utils.objectHasOwnProperty(newFlags, key) && newFlags[key] && (!flags[key] || flags[key].deleted)) {
+    //     changes[key] = { current: getFlagDetail(newFlags[key]) };
+    //   }
+    // }
+
+    // flags = { ...newFlags };
+    // return handleFlagChanges(changes).catch(() => {}); // swallow any exceptions from this Promise
   }
 
   // Returns a Promise which will be resolved when we have dispatched all change events and updated
@@ -690,7 +701,7 @@ export function initialize(clientSdkKey, flagKeys, user, specifiedOptions, platf
         return signalSuccessfulInit();
       } else if (useLocalStorage) {
         console.log("finishInitWithLocalStorage");
-        return finishInitWithLocalStorage();
+        return finishInitWithLocalStorage(flagKeys);
       } else if(offline){
         flags = {}
         return signalSuccessfulInit();
@@ -702,7 +713,7 @@ export function initialize(clientSdkKey, flagKeys, user, specifiedOptions, platf
     });
   }
 
-  function finishInitWithLocalStorage() {
+  function finishInitWithLocalStorage(flagKeys) {
     return store
       .loadFlags()
       .catch(() => null) // treat an error the same as if no flags were available
@@ -710,8 +721,8 @@ export function initialize(clientSdkKey, flagKeys, user, specifiedOptions, platf
         if (storedFlags === null || storedFlags === undefined) {
           flags = {};
           return requestor
-            .fetchFlagSettings(ident.getUser(), hash)
-            .then(requestedFlags => replaceAllFlags(requestedFlags || {}))
+            .fetchFlagsWithResult(ident.getUser(), flagKeys)
+            .then(result => replaceAllFlags(result.data.flags || {}))
             .then(signalSuccessfulInit)
             .catch(err => {
               const initErr = new errors.LDFlagFetchError(messages.errorFetchingFlags(err));
@@ -723,10 +734,10 @@ export function initialize(clientSdkKey, flagKeys, user, specifiedOptions, platf
           // the in-memory flags unless you subscribe for changes
           flags = storedFlags;
           utils.onNextTick(signalSuccessfulInit);
-
           return requestor
-            .fetchFlagSettings(ident.getUser(), hash)
-            .then(requestedFlags => replaceAllFlags(requestedFlags))
+             //.fetchFlagSettings(ident.getUser(), hash)
+            .fetchFlagsWithResult(ident.getUser(),flagKeys)
+            .then(result => replaceAllFlags(result.data.flags))
             .catch(err => emitter.maybeReportError(err));
         }
       });

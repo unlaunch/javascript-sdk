@@ -29,14 +29,14 @@ export default function Store(localStorageProvider, environment, hash, ident, lo
         }
         try {
           let data = JSON.parse(dataStr);
-          if (data) {
-            const schema = data.$schema;
-            if (schema === undefined || schema < 1) {
-              data = utils.transformValuesToVersionedValues(data);
-            } else {
-              delete data['$schema'];
-            }
-          }
+          // if (data) {
+          //   const schema = data.$schema;
+          //   if (schema === undefined || schema < 1) {
+          //     data = utils.transformValuesToVersionedValues(data);
+          //   } else {
+          //     delete data['$schema'];
+          //   }
+          // }
           return data;
         } catch (ex) {
           return store.clearFlags().then(() => Promise.reject(ex));
@@ -50,7 +50,8 @@ export default function Store(localStorageProvider, environment, hash, ident, lo
   // Returns a Promise which will be resolved with no value if successful, or rejected if storage
   // was not available.
   store.saveFlags = flags => {
-    const data = utils.extend({}, flags, { $schema: 1 });
+  //  const data = utils.extend({}, flags, { $schema: 1 });
+    const data = flags;
     return localStorageProvider.set(getFlagsKey(), JSON.stringify(data)).catch(err => {
       logger.warn(messages.localStorageUnavailable());
       return Promise.reject(err);
