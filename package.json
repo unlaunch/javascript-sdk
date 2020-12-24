@@ -1,5 +1,5 @@
 {
-  "name": "js-client-sdk",
+  "name": "unlaunch-js-client-sdk",
   "version": "1.0.0",
   "description": "UnLaunch SDK for JavaScript",
   "author": "Unlaunch <unlaunch@gmail.com>",
@@ -10,19 +10,19 @@
     "client"
   ],
   "files": [
-    "ldclient.cjs.js",
-    "ldclient.cjs.js.map",
-    "ldclient.es.js",
-    "ldclient.es.js.map",
-    "ldclient.min.js",
-    "ldclient.min.js.map",
+    "ulclient.cjs.js",
+    "ulclient.cjs.js.map",
+    "ulclient.es.js",
+    "ulclient.es.js.map",
+    "ulclient.min.js",
+    "ulclient.min.js.map",
     "typings.d.ts"
   ],
   "types": "./typings.d.ts",
-  "main": "dist/ldclient.cjs.js",
-  "module": "dist/ldclient.es.js",
-  "unpkg": "dist/ldclient.min.js",
-  "jsdelivr": "dist/ldclient.min.js",
+  "main": "dist/ulclient.cjs.js",
+  "module": "dist/ulclient.es.js",
+  "unpkg": "dist/ulclient.min.js",
+  "jsdelivr": "dist/ulclient.min.js",
   "scripts": {
     "lint": "eslint --format 'node_modules/eslint-formatter-pretty' --ignore-path ./.eslintignore",
     "lint:all": "eslint --format 'node_modules/eslint-formatter-pretty' --ignore-path ./.eslintignore src",
@@ -81,10 +81,10 @@
   "dependencies": {
     "escape-string-regexp": "^1.0.5",
     "js-sdk-common": "file:../js-sdk-common",
-    "launchdarkly-js-sdk-common": "file:../js-sdk-common"
+    "unlaunch-js-sdk-common": "file:../js-sdk-common"
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/launchdarkly/js-client-sdk.git"
+    "url": "git://github.com/unlaunch/javascript-sdk.git"
   }
 }

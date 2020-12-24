@@ -2,13 +2,13 @@
 // This file exists only so that we can run the TypeScript compiler in the CI build
 // to validate our typings.d.ts file. The code will not actually be run.
 
-import * as ld from 'launchdarkly-js-client-sdk';
+import * as ul from 'unlaunch-js-client-sdk';
 
-var ver: string = ld.version;
+var ver: string = ul.version;
 
-var emptyOptions: ld.LDOptions = {};
-var logger: ld.LDLogger = ld.createConsoleLogger("info");
-var allOptions: ld.LDOptions = {
+var emptyOptions: ul.ULOptions = {};
+var logger: ul.ULLogger = ul.createConsoleLogger("info");
+var allOptions: ul.ULOptions = {
   bootstrap: { },
   hash: '',
   baseUrl: '',
@@ -16,7 +16,7 @@ var allOptions: ld.LDOptions = {
   streamUrl: '',
   streaming: true,
   useReport: true,
-  sendLDHeaders: true,
+  sendULHeaders: true,
   evaluationReasons: true,
   fetchGoals: true,
   sendEvents: true,
@@ -31,8 +31,8 @@ var allOptions: ld.LDOptions = {
   disableSyncEventPost: true,
   logger: logger
 };
-var userWithKeyOnly: ld.LDUser = { key: 'user' };
-var user: ld.LDUser = {
+var userWithKeyOnly: ul.ULUser = { key: 'user' };
+var user: ul.ULUser = {
   key: 'user',
   name: 'name',
   firstName: 'first',
@@ -52,7 +52,7 @@ var user: ld.LDUser = {
   },
   privateAttributeNames: [ 'name', 'email' ]
 };
-var client: ld.LDClient = ld.initialize('env', user, allOptions);
+var client: ul.ULClient = ul.initialize('env', user, allOptions);
 
 client.waitUntilReady().then(() => {});
 client.waitForInitialization().then(() => {});
@@ -62,19 +62,19 @@ client.identify(user).then(() => {});
 client.identify(user, undefined, () => {});
 client.identify(user, 'hash').then(() => {});
 
-var user: ld.LDUser = client.getUser();
+var user: ul.ULUser = client.getUser();
 
 client.flush(() => {});
 client.flush().then(() => {});
 
-var boolFlagValue: ld.LDFlagValue = client.variation('key', false);
-var numberFlagValue: ld.LDFlagValue = client.variation('key', 2);
-var stringFlagValue: ld.LDFlagValue = client.variation('key', 'default');
+var boolFlagValue: ul.ULFlagValue = client.variation('key', false);
+var numberFlagValue: ul.ULFlagValue = client.variation('key', 2);
+var stringFlagValue: ul.ULFlagValue = client.variation('key', 'default');
 
-var detail: ld.LDEvaluationDetail = client.variationDetail('key', 'default');
-var detailValue: ld.LDFlagValue = detail.value;
+var detail: ul.ULEvaluationDetail = client.variationDetail('key', 'default');
+var detailValue: ul.ULFlagValue = detail.value;
 var detailIndex: number | undefined = detail.variationIndex;
-var detailReason: ld.LDEvaluationReason = detail.reason;
+var detailReason: ul.ULEvaluationReason = detail.reason;
 
 client.setStreaming(true);
 client.setStreaming();
@@ -87,8 +87,8 @@ client.track('event');
 client.track('event', { someData: 'x' });
 client.track('event', null, 3.5);
 
-var flagSet: ld.LDFlagSet = client.allFlags();
-var flagSetValue: ld.LDFlagValue = flagSet['key'];
+var flagSet: ul.ULFlagSet = client.allFlags();
+var flagSetValue: ul.ULFlagValue = flagSet['key'];
 
 client.close(() => {});
 client.close().then(() => {});

@@ -1,72 +1,73 @@
 /**
- * This is the API reference for the LaunchDarkly SDK for browser JavaScript.
+ * This is the API reference for the Unlaunch SDK for browser JavaScript.
  *
  * In typical usage, you will call [[initialize]] once at startup time to obtain an instance of
- * [[LDClient]], which provides access to all of the SDK's functionality.
+ * [[ULClient]], which provides access to all of the SDK's functionality.
  *
- * For more information, see the [SDK reference guide](http://docs.launchdarkly.com/docs/js-sdk-reference).
+ * For more information, see the [SDK reference guide](http://docs.unlaunch.com/docs/js-sdk-reference).
  */
-declare module 'launchdarkly-js-client-sdk' {
+declare module 'unlaunch-js-client-sdk' {
 
 //// DOCBUILD-START-REPLACE  (see docs/Makefile)
-  export * from 'launchdarkly-js-sdk-common';
-  import { LDClientBase, LDOptionsBase, LDUser } from 'launchdarkly-js-sdk-common';
+  export * from 'unlaunch-js-sdk-common';
+  import { ULClientBase, ULOptionsBase, ULUser } from 'unlaunch-js-sdk-common';
 //// DOCBUILD-END-REPLACE
 
   /**
-   * Creates an instance of the LaunchDarkly client.
+   * Creates an instance of the Unlaunch client.
    *
-   * The client will begin attempting to connect to LaunchDarkly as soon as it is created. To
-   * determine when it is ready to use, call [[LDClient.waitForInitialization]], or register an
-   * event listener for the `"ready"` event using [[LDClient.on]].
+   * The client will begin attempting to connect to Unlaunch as soon as it is created. To
+   * determine when it is ready to use, call [[ULClient.waitForInitialization]], or register an
+   * event listener for the `"ready"` event using [[ULClient.on]].
    *
    * Note that you can either import this as a named export or as part of the default exports,
    * although the latter is deprecated:
    *
    *     // Preferred usage:
-   *     import { initialize } from 'launchdarkly-js-client-sdk';
-   *     const client = initialize(envKey, user, options);
+   *     import { initialize } from 'unlaunch-js-client-sdk';
+   *     const client = initialize(clientSdkKey,flagKeys, identity, attributes, options);
    *
-   *     // Deprecated usage:
-   *     import LaunchDarkly from 'launchdarkly-js-client-sdk';
-   *     const client = LaunchDarkly.initialize(envKey, user, options);
-   *
-   * @param envKey
-   *   The environment ID.
-   * @param user
-   *   The initial user properties. These can be changed later with [[LDClient.identify]].
+   *  
+   * @param clientSdkKey
+   *   The client Sdk Key .
+   * @param flagKeys
+   *   flag keys in array
+   * @param identity
+   *   user identity
+   * @param attributes
+   *   The initial user attributes.
    * @param options
    *   Optional configuration settings.
    * @return
    *   The new client instance.
    */
-  export function initialize(envKey: string, user: LDUser, options?: LDOptions): LDClient;
+  export function initialize(clientSdkKey: string, user: ULUser, options?: ULOptions): ULClient;
 
   // This is @ignored because TypeDoc does not show default exports correctly. We'll just explain
   // the export situation in the comment for initialize().
   /** @ignore */
-  const LaunchDarkly: {
-    initialize: (envKey: string, user: LDUser, options?: LDOptions) => LDClient;
+  const Unlaunch: {
+    initialize: (envKey: string, user: ULUser, options?: ULOptions) => ULClient;
     version: string;
   };
 
   /** @ignore */ // see above
-  export default LaunchDarkly;
+  export default Unlaunch;
 
   /**
-   * Initialization options for the LaunchDarkly browser SDK.
+   * Initialization options for the Unlaunch browser SDK.
    */
-  export interface LDOptions extends LDOptionsBase {
+  export interface ULOptions extends ULOptionsBase {
     /**
      * The signed user key for Secure Mode.
      *
      * For more information, see the JavaScript SDK Reference Guide on
-     * [Secure mode](https://docs.launchdarkly.com/docs/js-sdk-reference#section-secure-mode).
+     * [Secure mode](https://docs.unlaunch.com/docs/js-sdk-reference#section-secure-mode).
      */
     hash?: string;
 
     /**
-     * Whether the client should make a request to LaunchDarkly for A/B testing goals.
+     * Whether the client should make a request to Unlaunch for A/B testing goals.
      *
      * This is true by default, meaning that this request will be made on every page load.
      * Set it to false if you are not using A/B testing and want to skip the request.
@@ -92,15 +93,15 @@ declare module 'launchdarkly-js-client-sdk' {
   }
 
   /**
-   * The LaunchDarkly SDK client object.
+   * The Unlaunch SDK client object.
    *
    * Applications should configure the client at page load time and reuse the same instance.
    *
-   * For more information, see the [SDK Reference Guide](https://docs.launchdarkly.com/docs/js-sdk-reference).
+   * For more information, see the [SDK Reference Guide](https://docs.unlaunch.com/docs/js-sdk-reference).
    */
-  export interface LDClient extends LDClientBase {
+  export interface ULClient extends ULClientBase {
     /**
-     * Allows you to wait until the client has received goals data from LaunchDarkly.
+     * Allows you to wait until the client has received goals data from Unlaunch.
      *
      * This is only relevant if you are using A/B testing features like click events and
      * pageview events; until the client has received the configuration for these (which
