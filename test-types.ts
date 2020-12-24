@@ -13,8 +13,6 @@ var allOptions: ul.ULOptions = {
   hash: '',
   baseUrl: '',
   eventsUrl: '',
-  streamUrl: '',
-  streaming: true,
   useReport: true,
   sendULHeaders: true,
   evaluationReasons: true,
@@ -26,7 +24,6 @@ var allOptions: ul.ULOptions = {
   sendEventsOnlyForVariation: true,
   flushInterval: 1,
   samplingInterval: 1,
-  streamReconnectDelay: 1,
   eventUrlTransformer: url => url + 'x',
   disableSyncEventPost: true,
   logger: logger
@@ -76,16 +73,9 @@ var detailValue: ul.ULFlagValue = detail.value;
 var detailIndex: number | undefined = detail.variationIndex;
 var detailReason: ul.ULEvaluationReason = detail.reason;
 
-client.setStreaming(true);
-client.setStreaming();
-
 function handleEvent() {}
 client.on('event', handleEvent);
 client.off('event', handleEvent);
-
-client.track('event');
-client.track('event', { someData: 'x' });
-client.track('event', null, 3.5);
 
 var flagSet: ul.ULFlagSet = client.allFlags();
 var flagSetValue: ul.ULFlagValue = flagSet['key'];
