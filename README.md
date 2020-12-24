@@ -1,50 +1,63 @@
 ### javascript-sdk
 
-Two branches are created one for js-sdk-common and one for js-client-sdk in a single repo. Download the code  
+The unlaunch javascript browser-sdk code is available in develop branch. The client has dependency in javascript-sdk-common project which can be downloaded from https://github.com/unlaunch/javascript-sdk-common develop branch. After downloading the code from both repos follow below steps
 
-1. Go to js-client-sdk directory and run 'npm link path-to-js-sdk-common-dir'
+1. Go to javascript-sdk-common directory and run 'npm install' and then run 'npm run build'
 
-2. Go to your project directory and run 'npm link path-to-js-client-sdk-dir'
+2. Go to javascript-client-sdk directory and run 'npm link path-to-js-sdk-common-dir' 
 
-3. In your project directory run 'npm install'
+3. Install javascript-client-sdk dependencies by running 'npm install' and then build 'npm run build'
 
-4. Import js-client-sdk in your project
+4. Go to your project directory and run 'npm link path-to-js-client-sdk-dir'
+
+5. In your project directory run 'npm install'
+
+6. Import unlaunch-js-client-sdk in your project
 
 ```javascript
-import * as LDClient from "js-client-sdk";
+import * as ULClient from "unlaunch-js-client-sdk";
+```
+7. Define flagkeys in array to pass it to the initliaze method.  
+
+```javascript
+let flagKeys = ["js-flag"];
 ```
 
-5. Create user object for which flags needs to be evaluated
+8. Declare identity property and create attributes object to pass it to the initliaze method.  
 
 ```javascript
-var user = {
-  "key": "abcd343",
+let identity = 'user123';
+
+let attributes = {
+ 
   "country": "US"
 };
 ```
 
-6. Add flag keys in options to initialize client object with flags
+9. Create options object to pass optional properties in initialize method. The options object can take properties like evaluationReason, offline, bootstrap
  
 ```javascript
 var options = {
 
-  flagKeys: ["js-flag"]
+  bootstrap: 'localstorage',
+  evaluationReason: true,
+  offline: true
 
 }
 ```
 
-7. Provide browser-client-id that starts with 'test-client' as first argument in initialize and user and options object
+10. Provide browser-client-id that starts with 'test-client' as first argument in initialize and other arguments
 
 ```javascript
-var ldclient = LDClient.initialize('test-client-*************', user, options);
+let ulclient = ULClient.initialize('test-client-*************', flagKeys, identity , attributes, options);
 ```
 
-8. Wait for the client to get ready. Use variation method to get the variation
+11. Wait for the client to get ready. Use variation method to get the variation
 
 ```javascript
-ldclient.on('ready', function() {
+ulclient.on('ready', function() {
   
-  var jsFlag = ldclient.variation("js-flag", 'off');
+  let jsFlag = ulclient.variation("js-flag");
   
   if (jsFlag == 'on') {
     
@@ -55,9 +68,10 @@ ldclient.on('ready', function() {
     console.log("Hello. Js Flag is off");
 
   }
+);
 ```
-9. To get variation configuration use variantConfig method
+12. To get variation configuration use variantConfig method
 
 ```javascript
-var varConf = ldclient.variantConfig("js-flag", variation);
+let varConf = ulclient.variantConfig("js-flag");
 ```
