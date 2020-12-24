@@ -27,12 +27,6 @@ export default function EventSender(platform, environmentId, options) {
     const payloadId = isDiagnostic ? null : uuidv1();
 
     function doPostRequest(canRetry) {
-      // const headers = isDiagnostic
-      //   ? baseHeaders
-      //   : utils.extend({}, baseHeaders, {
-      //       'X-LaunchDarkly-Event-Schema': '3',
-      //       'X-LaunchDarkly-Payload-ID': payloadId,
-      //     });
       const headers = baseHeaders;
 
       return platform

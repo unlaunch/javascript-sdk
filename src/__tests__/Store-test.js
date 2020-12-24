@@ -9,7 +9,7 @@ describe('Store', () => {
   const user = { key: 'user' };
   const ident = Identity(user);
   const env = 'ENVIRONMENT';
-  const lsKey = 'ld:' + env + ':' + utils.btoa(JSON.stringify(user));
+  const lsKey = 'ul:' + env + ':' + utils.btoa(JSON.stringify(user));
 
   it('stores flags', async () => {
     const platform = stubPlatform.defaults();
@@ -70,7 +70,7 @@ describe('Store', () => {
   it('uses hash, if present, instead of user properties', async () => {
     const platform = stubPlatform.defaults();
     const hash = '12345';
-    const keyWithHash = 'ld:' + env + ':' + hash;
+    const keyWithHash = 'ul:' + env + ':' + hash;
     const store = Store(platform.localStorage, env, hash, ident, platform.testing.logger);
 
     const flags = { flagKey: { value: 'x' } };

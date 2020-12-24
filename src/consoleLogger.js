@@ -12,7 +12,7 @@ export default function createConsoleLogger(level, maybePrefix) {
   if (maybePrefix !== null && maybePrefix !== undefined) {
     prefix = maybePrefix === '' ? '' : maybePrefix + ' ';
   } else {
-    prefix = 'LD: ';
+    prefix = 'UL: ';
   }
   let minLevelIndex = 0;
   if (level) {

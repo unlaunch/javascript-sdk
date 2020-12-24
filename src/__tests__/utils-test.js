@@ -1,7 +1,7 @@
 import {
   base64URLEncode,
-  getLDHeaders,
-  getLDUserAgentString,
+  getULHeaders,
+  getULUserAgentString,
   wrapPromiseCallback,
   chunkUserEventsForUrl,
 } from '../utils';
@@ -47,50 +47,50 @@ describe('utils', () => {
     });
   });
 
-  describe('getLDHeaders', () => {
-    it('sends no headers unless sendLDHeaders is true', () => {
+  describe('getULHeaders', () => {
+    it('sends no headers unless sendULHeaders is true', () => {
       const platform = stubPlatform.defaults();
-      const headers = getLDHeaders(platform, {});
+      const headers = getULHeaders(platform, {});
       expect(headers).toEqual({});
     });
 
     it('adds custom user-agent header', () => {
       const platform = stubPlatform.defaults();
-      const headers = getLDHeaders(platform, { sendLDHeaders: true });
-      expect(headers).toMatchObject({ 'X-LaunchDarkly-User-Agent': getLDUserAgentString(platform) });
+      const headers = getULHeaders(platform, { sendULHeaders: true });
+      expect(headers).toMatchObject({ 'X-LaunchDarkly-User-Agent': getULUserAgentString(platform) });
     });
 
     it('adds wrapper info if specified, without version', () => {
       const platform = stubPlatform.defaults();
-      const headers = getLDHeaders(platform, { sendLDHeaders: true, wrapperName: 'FakeSDK' });
+      const headers = getULHeaders(platform, { sendULHeaders: true, wrapperName: 'FakeSDK' });
       expect(headers).toMatchObject({
-        'X-LaunchDarkly-User-Agent': getLDUserAgentString(platform),
+        'X-LaunchDarkly-User-Agent': getULUserAgentString(platform),
         'X-LaunchDarkly-Wrapper': 'FakeSDK',
       });
     });
 
     it('adds wrapper info if specified, with version', () => {
       const platform = stubPlatform.defaults();
-      const headers = getLDHeaders(platform, { sendLDHeaders: true, wrapperName: 'FakeSDK', wrapperVersion: '9.9' });
+      const headers = getULHeaders(platform, { sendULHeaders: true, wrapperName: 'FakeSDK', wrapperVersion: '9.9' });
       expect(headers).toMatchObject({
-        'X-LaunchDarkly-User-Agent': getLDUserAgentString(platform),
+        'X-LaunchDarkly-User-Agent': getULUserAgentString(platform),
         'X-LaunchDarkly-Wrapper': 'FakeSDK/9.9',
       });
     });
   });
 
-  describe('getLDUserAgentString', () => {
+  describe('getULUserAgentString', () => {
     it('uses platform user-agent and package version by default', () => {
       const platform = stubPlatform.defaults();
       platform.version = undefined;
-      const ua = getLDUserAgentString(platform);
+      const ua = getULUserAgentString(platform);
       expect(ua).toEqual('stubClient/' + VERSION);
     });
 
     it('uses platform user-agent and platform version if provided', () => {
       const platform = stubPlatform.defaults();
       platform.version = '7.8.9';
-      const ua = getLDUserAgentString(platform);
+      const ua = getULUserAgentString(platform);
       expect(ua).toEqual('stubClient/7.8.9');
     });
   });

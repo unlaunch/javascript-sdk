@@ -9,7 +9,7 @@ import { respond, respondJson } from './mockHttp';
 import * as stubPlatform from './stubPlatform';
 import { makeBootstrap, numericUser, stringifiedNumericUser } from './testUtils';
 
-describe('LDClient', () => {
+describe('ULClient', () => {
   const envName = 'UNKNOWN_ENVIRONMENT_ID';
   const user = { key: 'user' };
   let platform;
@@ -38,7 +38,7 @@ describe('LDClient', () => {
   }
 
   it('should exist', () => {
-    expect(LDClient).toBeDefined();
+    expect(ULClient).toBeDefined();
   });
 
   describe('initialization', () => {
@@ -107,15 +107,15 @@ describe('LDClient', () => {
     });
 
     it('should contain package version', () => {
-      const version = LDClient.version;
+      const version = ULClient.version;
       // All client bundles above 1.0.7 should contain package version
       const result = semverCompare(version, '1.0.6');
       expect(result).toEqual(1);
     });
 
-    async function verifyCustomHeader(sendLDHeaders, shouldGetHeaders) {
+    async function verifyCustomHeader(sendULHeaders, shouldGetHeaders) {
       await withServers(async (baseConfig, pollServer) => {
-        await withClient(user, { ...baseConfig, sendLDHeaders }, async client => {
+        await withClient(user, { ...baseConfig, sendULHeaders }, async client => {
           await client.waitForInitialization();
           const request = await pollServer.nextRequest();
           expect(request.headers['x-launchdarkly-user-agent']).toEqual(

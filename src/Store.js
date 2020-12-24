@@ -15,7 +15,7 @@ export default function Store(localStorageProvider, environment, hash, ident, lo
     if (user) {
       key = hash || utils.btoa(JSON.stringify(user));
     }
-    return 'ld:' + environment + ':' + key;
+    return 'ul:' + environment + ':' + key;
   }
 
   // Returns a Promise which will be resolved with a parsed JSON value if a stored value was available,

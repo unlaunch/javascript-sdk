@@ -9,10 +9,10 @@ import * as stubPlatform from './stubPlatform';
 // These tests cover the "bootstrap: 'localstorage'" mode. The actual implementation of local storage
 // is provided by the platform-specific SDKs; we use a mock implementation here.
 
-describe('LDClient local storage', () => {
+describe('ULClient local storage', () => {
   const envName = 'UNKNOWN_ENVIRONMENT_ID';
   const user = { key: 'user' };
-  const lsKey = 'ld:' + envName + ':' + utils.btoa(JSON.stringify(user));
+  const lsKey = 'ul:' + envName + ':' + utils.btoa(JSON.stringify(user));
   let platform;
 
   beforeEach(() => {
@@ -78,7 +78,7 @@ describe('LDClient local storage', () => {
           // don't wait for ready event - verifying that variation() doesn't throw an error if called before ready
           expect(client.variation('flag-key', 0)).toEqual(0);
 
-          // verify that the flags get requested from LD
+          // verify that the flags get requested from UL
           await client.waitForInitialization();
           expect(client.variation('flag-key')).toEqual(1);
         });
@@ -133,7 +133,7 @@ describe('LDClient local storage', () => {
 
     it('should use hash as localStorage key when secure mode is enabled', async () => {
       const hash = 'totallyLegitHash';
-      const lsKeyHash = 'ld:UNKNOWN_ENVIRONMENT_ID:' + hash;
+      const lsKeyHash = 'ul:UNKNOWN_ENVIRONMENT_ID:' + hash;
       const flags = { 'enable-foo': { value: true } };
 
       await withServer(async server => {
@@ -150,7 +150,7 @@ describe('LDClient local storage', () => {
     });
 
     it('should clear localStorage when user context is changed', async () => {
-      const lsKey2 = 'ld:UNKNOWN_ENVIRONMENT_ID:' + utils.btoa('{"key":"user2"}');
+      const lsKey2 = 'ul:UNKNOWN_ENVIRONMENT_ID:' + utils.btoa('{"key":"user2"}');
       const flags = { 'enable-foo': { value: true } };
       const user2 = { key: 'user2' };
 

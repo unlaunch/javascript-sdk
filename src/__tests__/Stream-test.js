@@ -1,7 +1,7 @@
 import { DiagnosticsAccumulator } from '../diagnosticEvents';
 import * as messages from '../messages';
 import Stream from '../Stream';
-import { getLDHeaders } from '../utils';
+import { getULHeaders } from '../utils';
 
 import { sleepAsync } from 'launchdarkly-js-test-helpers';
 import EventSource from './EventSource-mock';
@@ -15,7 +15,7 @@ describe('Stream', () => {
   const user = { key: 'me' };
   const encodedUser = 'eyJrZXkiOiJtZSJ9';
   const hash = '012345789abcde';
-  const defaultConfig = { streamUrl: baseUrl, sendLDHeaders: true };
+  const defaultConfig = { streamUrl: baseUrl, sendULHeaders: true };
   let logger;
   let platform;
   let baseHeaders;
@@ -24,7 +24,7 @@ describe('Stream', () => {
     logger = stubPlatform.logger();
     defaultConfig.logger = logger;
     platform = stubPlatform.defaults();
-    baseHeaders = getLDHeaders(platform, defaultConfig);
+    baseHeaders = getULHeaders(platform, defaultConfig, '');
   });
 
   function makeExpectedStreamUrl(base64User, userHash, withReasons) {
@@ -111,8 +111,8 @@ describe('Stream', () => {
     expect(created.options.headers).toEqual({ ...baseHeaders, 'X-LaunchDarkly-Wrapper': 'FakeSDK' });
   });
 
-  it('does not send SDK headers when sendLDHeaders is false', async () => {
-    const config = { ...defaultConfig, sendLDHeaders: false };
+  it('does not send SDK headers when sendULHeaders is false', async () => {
+    const config = { ...defaultConfig, sendULHeaders: false };
     const stream = new Stream(platform, config, envName);
     stream.connect(user, null, {});
 

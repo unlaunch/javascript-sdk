@@ -1,7 +1,7 @@
 import { sleepAsync, eventSink } from 'launchdarkly-js-test-helpers';
 
 import * as configuration from '../configuration';
-import { LDInvalidArgumentError } from '../errors';
+import { ULInvalidArgumentError } from '../errors';
 import * as messages from '../messages';
 import EventEmitter from '../EventEmitter';
 
@@ -24,7 +24,7 @@ describe('configuration', () => {
         await sleepAsync(0);
         expect(errorQueue.length()).toEqual(1);
         if (message) {
-          expect(await errorQueue.take()).toEqual(new LDInvalidArgumentError(message));
+          expect(await errorQueue.take()).toEqual(new ULInvalidArgumentError(message));
         } else {
           expect((await errorQueue.take()).constructor.prototype.name).toEqual('LaunchDarklyInvalidArgumentError');
         }
@@ -103,7 +103,7 @@ describe('configuration', () => {
 
   checkBooleanProperty('sendEvents');
   checkBooleanProperty('allAttributesPrivate');
-  checkBooleanProperty('sendLDHeaders');
+  checkBooleanProperty('sendULHeaders');
   checkBooleanProperty('inlineUsersInEvents');
   checkBooleanProperty('allowFrequentDuplicateEvents');
   checkBooleanProperty('sendEventsOnlyForVariation');

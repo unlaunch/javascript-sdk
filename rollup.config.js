@@ -43,8 +43,8 @@ const configs = [
   {
     input: entryPoint,
     output: {
-      name: 'LDClient-Common',
-      file: process.env.NODE_ENV === 'production' ? './dist/ldclient-common.min.js' : './dist/ldclient-common.js',
+      name: 'ULClient-Common',
+      file: process.env.NODE_ENV === 'production' ? './dist/ulclient-common.min.js' : './dist/ulclient-common.js',
       format: 'umd',
       sourcemap: true,
     },

@@ -78,7 +78,7 @@ describe('DiagnosticsManager', () => {
   const envId = 'my-environment-id';
   const defaultStartTime = 1000;
   const defaultInterval = 100000;
-  const localStorageKey = 'ld:' + envId + ':$diagnostics';
+  const localStorageKey = 'ul:' + envId + ':$diagnostics';
   const sdkData = {
     name: 'js-test',
     version: '0.0.1',

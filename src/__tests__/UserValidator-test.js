@@ -37,7 +37,7 @@ describe('UserValidator', () => {
     };
     const u = { anonymous: true };
     expect(await uv.validateUser(u)).toEqual({ key: cachedKey, anonymous: true });
-    expect(storageKey).toEqual('ld:$anonUserId');
+    expect(storageKey).toEqual('ul:$anonUserId');
   });
 
   it('generates and stores key for anonymous user', async () => {
@@ -52,6 +52,6 @@ describe('UserValidator', () => {
     const u1 = await uv.validateUser(u0);
     expect(storedValue).toEqual(expect.anything());
     expect(u1).toEqual({ key: storedValue, anonymous: true });
-    expect(storageKey).toEqual('ld:$anonUserId');
+    expect(storageKey).toEqual('ul:$anonUserId');
   });
 });

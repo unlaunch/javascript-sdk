@@ -1,7 +1,7 @@
 /**
- * Basic LaunchDarkly JavaScript client interfaces, shared between the browser SDK and the Electron SDK.
+ * Basic UnLaunch JavaScript client interfaces, shared between the browser SDK and the Electron SDK.
  */
-declare module 'launchdarkly-js-sdk-common' {
+declare module 'unlaunch-js-sdk-common' {
 
   /**
    * The current version string of the SDK.
@@ -13,33 +13,33 @@ declare module 'launchdarkly-js-sdk-common' {
    *
    * Flags can have any JSON-serializable value.
    */
-  export type LDFlagValue = any;
+  export type ULFlagValue = any;
 
   /**
    * A map of feature flags from their keys to their values.
    */
-  export interface LDFlagSet {
-    [key: string]: LDFlagValue;
+  export interface ULFlagSet {
+    [key: string]: ULFlagValue;
   }
 
   /**
    * A map of feature flag keys to objects holding changes in their values.
    */
-  export interface LDFlagChangeset {
+  export interface ULFlagChangeset {
     [key: string]: {
-      current: LDFlagValue;
-      previous: LDFlagValue;
+      current: ULFlagValue;
+      previous: ULFlagValue;
     };
   }
 
   /**
-   * The minimal interface for any object that LDClient can use for logging.
+   * The minimal interface for any object that ULClient can use for logging.
    *
    * The client uses four log levels, with "error" being the most severe. Each corresponding
    * logger method takes a single string parameter. The logger implementation is responsible
    * for deciding whether to produce output or not based on the level.
    */
-  export interface LDLogger {
+  export interface ULLogger {
     debug: (message: string) => void;
     info: (message: string) => void;
     warn: (message: string) => void;
@@ -52,70 +52,53 @@ declare module 'launchdarkly-js-sdk-common' {
    * level (if enable) to `console.log()`, `console.info()`, `console.warn()`, and `console.error()`
    * respectively.
    *
-   * To make LDClient use this logger, put it in the `logger` property of [[LDOptions]].
+   * To make ULClient use this logger, put it in the `logger` property of [[ULOptions]].
    */
-  export function createConsoleLogger(minimumLevel: string): LDLogger;
+  export function createConsoleLogger(minimumLevel: string): ULLogger;
 
   /**
-   * LaunchDarkly initialization options that are supported by all variants of the JS client.
+   * Unlaunch initialization options that are supported by all variants of the JS client.
    * The browser SDK and Electron SDK may support additional options.
    *
-   * @ignore (don't need to show this separately in TypeDoc output; all properties will be shown in LDOptions)
+   * @ignore (don't need to show this separately in TypeDoc output; all properties will be shown in ULOptions)
    */
-  export interface LDOptionsBase {
+  export interface ULOptionsBase {
     /**
      * An object that will perform logging for the client.
      *
      * If not specified, the default is [[createConsoleLogger]] in the browser SDK, or a logger
      * from the `winston` package in Electron.
      */
-    logger?: LDLogger;
+    logger?: ULLogger;
 
     /**
      * The initial set of flags to use until the remote set is retrieved.
      *
      * If `"localStorage"` is specified, the flags will be saved and retrieved from browser local
-     * storage. Alternatively, an [[LDFlagSet]] can be specified which will be used as the initial
+     * storage. Alternatively, an [[ULFlagSet]] can be specified which will be used as the initial
      * source of flag values. In the latter case, the flag values will be available via [[variation]]
      * immediately after calling `initialize()` (normally they would not be available until the
      * client signals that it is ready).
      *
-     * For more information, see the [SDK Reference Guide](https://docs.launchdarkly.com/docs/js-sdk-reference#section-bootstrapping).
+     * For more information, see the [SDK Reference Guide](https://docs.unlaunch.com/docs/js-sdk-reference#section-bootstrapping).
      */
-    bootstrap?: 'localStorage' | LDFlagSet;
+    bootstrap?: 'localStorage' | ULFlagSet;
 
     /**
-     * The base URL for the LaunchDarkly server.
+     * The base URL for the Unlaunch server.
      *
      * Most users should use the default value.
      */
     baseUrl?: string;
 
     /**
-     * The base URL for the LaunchDarkly events server.
+     * The base URL for the Unlaunch events server.
      *
      * Most users should use the default value.
      */
     eventsUrl?: string;
 
-    /**
-     * The base URL for the LaunchDarkly streaming server.
-     *
-     * Most users should use the default value.
-     */
-    streamUrl?: string;
-
-    /**
-     * Whether or not to open a streaming connection to LaunchDarkly for live flag updates.
-     *
-     * If this is true, the client will always attempt to maintain a streaming connection; if false,
-     * it never will. If you leave the value undefined (the default), the client will open a streaming
-     * connection if you subscribe to `"change"` or `"change:flag-key"` events (see [[LDClient.on]]).
-     *
-     * This is equivalent to calling `client.setStreaming()` with the same value.
-     */
-    streaming?: boolean;
-
+  
     /**
      * Whether or not to use the REPORT verb to fetch flag settings.
      *
@@ -125,38 +108,38 @@ declare module 'launchdarkly-js-sdk-common' {
      * Otherwise (by default) a GET request will be issued with the user passed as
      * a base64 URL-encoded path parameter.
      *
-     * Do not use unless advised by LaunchDarkly.
+     * Do not use unless advised by Unlaunch.
      */
     useReport?: boolean;
 
     /**
-     * Whether or not to include custom HTTP headers when requesting flags from LaunchDarkly.
+     * Whether or not to include custom HTTP headers when requesting flags from Unlaunch.
      *
      * Currently these are used to track what version of the SDK is active. This defaults to true
      * (custom headers will be sent). One reason you might want to set it to false is that the presence
      * of custom headers causes browsers to make an extra OPTIONS request (a CORS preflight check)
      * before each flag request, which could affect performance.
      */
-    sendLDHeaders?: boolean;
+    sendULHeaders?: boolean;
 
     /**
-     * Whether LaunchDarkly should provide additional information about how flag values were
+     * Whether Unlaunch should provide additional information about how flag values were
      * calculated.
      *
      * The additional information will then be available through the client's
-     * [[LDClient.variationDetail]] method. Since this increases the size of network requests,
+     * [[ULClient.variationDetail]] method. Since this increases the size of network requests,
      * such information is not sent unless you set this option to true.
      */
     evaluationReasons?: boolean;
 
     /**
-     * Whether to send analytics events back to LaunchDarkly. By default, this is true.
+     * Whether to send analytics events back to Unlaunch. By default, this is true.
      */
     sendEvents?: boolean;
     
     /**
      * Whether all user attributes (except the user key) should be marked as private, and
-     * not sent to LaunchDarkly in analytics events.
+     * not sent to Unlaunch in analytics events.
      *
      * By default, this is false.
      */
@@ -164,8 +147,8 @@ declare module 'launchdarkly-js-sdk-common' {
 
     /**
      * The names of user attributes that should be marked as private, and not sent
-     * to LaunchDarkly in analytics events. You can also specify this on a per-user basis
-     * with [[LDUser.privateAttributeNames]].
+     * to Unlaunch in analytics events. You can also specify this on a per-user basis
+     * with [[ULUser.privateAttributeNames]].
      */
     privateAttributeNames?: Array<string>;
 
@@ -216,55 +199,13 @@ declare module 'launchdarkly-js-sdk-common' {
      * @deprecated This feature will be removed in a future version.
      */
     samplingInterval?: number;
-
-    /**
-     * How long (in milliseconds) to wait after a failure of the stream connection before trying to
-     * reconnect.
-     *
-     * This only applies if streaming has been enabled by setting [[streaming]] to true or
-     * subscribing to `"change"` events. The default is 1000ms.
-     */
-    streamReconnectDelay?: number;
-
-    /**
-     * Set to true to opt out of sending diagnostics data.
-     * 
-     * Unless `diagnosticOptOut` is set to true, the client will send some diagnostics data to the LaunchDarkly
-     * servers in order to assist in the development of future SDK improvements. These diagnostics consist of
-     * an initial payload containing some details of SDK in use, the SDK's configuration, and the platform the
-     * SDK is being run on, as well as payloads sent periodically with information on irregular occurrences such
-     * as dropped events.
-     */
-    diagnosticOptOut?: boolean;
-    
-    /**
-     * The interval at which periodic diagnostic data is sent, in milliseconds.
-     * 
-     * The default is 900000 (every 15 minutes) and the minimum value is 6000. See [[diagnosticOptOut]]
-     * for more information on the diagnostics data being sent.
-     */
-    diagnosticRecordingInterval?: number;
-
-    /**
-     * For use by wrapper libraries to set an identifying name for the wrapper being used.
-     *
-     * This will be sent as diagnostic information to the LaunchDarkly servers to allow recording
-     * metrics on the usage of these wrapper libraries.
-     */
-    wrapperName?: string;
-
-    /**
-     * For use by wrapper libraries to set version to be included alongside `wrapperName`.
-     *
-     * If `wrapperName` is unset, this field will be ignored.
-     */
-    wrapperVersion?: string;
+  
   }
 
   /**
-   * A LaunchDarkly user object.
+   * A Unlaunch user object.
    */
-  export interface LDUser {
+  export interface ULUser {
     /**
      * A unique string identifying a user.
      *
@@ -279,7 +220,7 @@ declare module 'launchdarkly-js-sdk-common' {
 
     /**
      * An optional secondary key for a user. This affects
-     * [feature flag targeting](https://docs.launchdarkly.com/docs/targeting-users#section-targeting-rules-based-on-user-attributes)
+     * [feature flag targeting](https://docs.unlaunch.com/docs/targeting-users#section-targeting-rules-based-on-user-attributes)
      * as follows: if you have chosen to bucket users by a specific attribute, the secondary key (if set)
      * is used to further distinguish between users who are otherwise identical according to that attribute.
      */
@@ -305,7 +246,7 @@ declare module 'launchdarkly-js-sdk-common' {
     /**
      * The user's email address.
      *
-     * If an `avatar` URL is not provided, LaunchDarkly will use Gravatar
+     * If an `avatar` URL is not provided, Unlaunch will use Gravatar
      * to try to display an avatar for the user on the Users page.
      */
     email?: string;
@@ -326,7 +267,7 @@ declare module 'launchdarkly-js-sdk-common' {
     country?: string;
 
     /**
-     * Whether to show the user on the Users page in LaunchDarkly.
+     * Whether to show the user on the Users page in Unlaunch.
      */
     anonymous?: boolean;
 
@@ -339,22 +280,22 @@ declare module 'launchdarkly-js-sdk-common' {
 
     /**
      * Specifies a list of attribute names (either built-in or custom) which should be
-     * marked as private, and not sent to LaunchDarkly in analytics events. This is in
+     * marked as private, and not sent to Unlaunch in analytics events. This is in
      * addition to any private attributes designated in the global configuration
-     * with [[LDOptions.privateAttributeNames]] or [[LDOptions.allAttributesPrivate]].
+     * with [[ULOptions.privateAttributeNames]] or [[ULOptions.allAttributesPrivate]].
      */
     privateAttributeNames?: Array<string>;
   }
 
   /**
    * Describes the reason that a flag evaluation produced a particular value. This is
-   * part of the [[LDEvaluationDetail]] object returned by [[LDClient.variationDetail]].
+   * part of the [[ULEvaluationDetail]] object returned by [[ULClient.variationDetail]].
    * 
-   * This type is separate from `[[LDEvaluationReason]]` for backwards compatibility. In 
-   * earlier versions of this SDK, `[[LDEvaluationReason]]` was incorrectly defined as 
+   * This type is separate from `[[ULEvaluationReason]]` for backwards compatibility. In 
+   * earlier versions of this SDK, `[[ULEvaluationReason]]` was incorrectly defined as 
    * being non-nullable.
    */
-  interface NonNullableLDEvaluationReason {
+  interface NonNullableULEvaluationReason {
     /**
      * The general category of the reason:
      *
@@ -392,26 +333,26 @@ declare module 'launchdarkly-js-sdk-common' {
 
   /**
    * Describes the reason that a flag evaluation produced a particular value. This is
-   * part of the [[LDEvaluationDetail]] object returned by [[LDClient.variationDetail]].
+   * part of the [[ULEvaluationDetail]] object returned by [[ULClient.variationDetail]].
    * 
-   * Will be null when `[[LDOptions.evaluationReasons]]` is `false`.
+   * Will be null when `[[ULOptions.evaluationReasons]]` is `false`.
    */
-  export type LDEvaluationReason = NonNullableLDEvaluationReason | null;
+  export type ULEvaluationReason = NonNullableULEvaluationReason | null;
 
   /**
    * An object that combines the result of a feature flag evaluation with information about
    * how it was calculated.
    *
-   * This is the result of calling [[LDClient.variationDetail]].
+   * This is the result of calling [[ULClient.variationDetail]].
    *
-   * For more information, see the [SDK reference guide](https://docs.launchdarkly.com/docs/evaluation-reasons).
+   * For more information, see the [SDK reference guide](https://docs.unlaunch.com/docs/evaluation-reasons).
    */
-  export interface LDEvaluationDetail {
+  export interface ULEvaluationDetail {
     /**
      * The result of the flag evaluation. This will be either one of the flag's variations or
-     * the default value that was passed to [[LDClient.variationDetail]].
+     * the default value that was passed to [[ULClient.variationDetail]].
      */
-    value: LDFlagValue;
+    value: ULFlagValue;
 
     /**
      * The index of the returned value within the flag's list of variations, e.g. 0 for the
@@ -422,18 +363,18 @@ declare module 'launchdarkly-js-sdk-common' {
     /**
      * An object describing the main factor that influenced the flag evaluation value.
      */
-    reason: LDEvaluationReason;
+    reason: ULEvaluationReason;
   }
 
   /**
-   * The basic interface for the LaunchDarkly client. The browser SDK and the Electron SDK both
+   * The basic interface for the Unlaunch client. The browser SDK and the Electron SDK both
    * use this, but may add some methods of their own.
    *
-   * @see http://docs.launchdarkly.com/docs/js-sdk-reference
+   * @see http://docs.unlaunch.com/docs/js-sdk-reference
    *
-   * @ignore (don't need to show this separately in TypeDoc output; all methods will be shown in LDClient)
+   * @ignore (don't need to show this separately in TypeDoc output; all methods will be shown in ULClient)
    */
-  export interface LDClientBase {
+  export interface ULClientBase {
     /**
      * Returns a Promise that tracks the client's initialization state.
      *
@@ -501,7 +442,7 @@ declare module 'launchdarkly-js-sdk-common' {
     waitForInitialization(): Promise<void>;
 
     /**
-     * Identifies a user to LaunchDarkly.
+     * Identifies a user to Unlaunch.
      *
      * Unlike the server-side SDKs, the client-side JavaScript SDKs maintain a current user state,
      * which is set at initialization time. You only need to call `identify()` if the user has changed
@@ -514,18 +455,18 @@ declare module 'launchdarkly-js-sdk-common' {
      * @param user
      *   The user properties. Must contain at least the `key` property.
      * @param hash
-     *   The signed user key if you are using [Secure Mode](http://docs.launchdarkly.com/docs/js-sdk-reference#secure-mode).
+     *   The signed user key if you are using [Secure Mode](http://docs.unlaunch.com/docs/js-sdk-reference#secure-mode).
      * @param onDone
      *   A function which will be called as soon as the flag values for the new user are available,
-     *   with two parameters: an error value (if any), and an [[LDFlagSet]] containing the new values
+     *   with two parameters: an error value (if any), and an [[ULFlagSet]] containing the new values
      *   (which can also be obtained by calling [[variation]]). If the callback is omitted, you will
      *   receive a Promise instead.
      * @returns
      *   If you provided a callback, then nothing. Otherwise, a Promise which resolve once the flag
-     *   values for the new user are available, providing an [[LDFlagSet]] containing the new values
+     *   values for the new user are available, providing an [[ULFlagSet]] containing the new values
      *   (which can also be obtained by calling [[variation]]).
      */
-    identify(user: LDUser, hash?: string, onDone?: (err: Error | null, flags: LDFlagSet | null) => void): Promise<LDFlagSet>;
+    identify(user: ULUser, hash?: string, onDone?: (err: Error | null, flags: ULFlagSet | null) => void): Promise<ULFlagSet>;
 
     /**
      * Returns the client's current user.
@@ -533,13 +474,13 @@ declare module 'launchdarkly-js-sdk-common' {
      * This is the user that was most recently passed to [[identify]], or, if [[identify]] has never
      * been called, the initial user specified when the client was created.
      */
-    getUser(): LDUser;
+    getUser(): ULUser;
 
     /**
      * Flushes all pending analytics events.
      *
      * Normally, batches of events are delivered in the background at intervals determined by the
-     * `flushInterval` property of [[LDOptions]]. Calling `flush()` triggers an immediate delivery.
+     * `flushInterval` property of [[ULOptions]]. Calling `flush()` triggers an immediate delivery.
      *
      * @param onDone
      *   A function which will be called when the flush completes. If omitted, you
@@ -561,44 +502,33 @@ declare module 'launchdarkly-js-sdk-common' {
      * @param key
      *   The unique key of the feature flag.
      * @param defaultValue
-     *   The default value of the flag, to be used if the value is not available from LaunchDarkly.
+     *   The default value of the flag, to be used if the value is not available from Unlaunch.
      * @returns
      *   The flag's value.
      */
-    variation(key: string, defaultValue?: LDFlagValue): LDFlagValue;
+    variation(key: string, defaultValue?: ULFlagValue): ULFlagValue;
 
     /**
      * Determines the variation of a feature flag for a user, along with information about how it was
      * calculated.
      *
-     * Note that this will only work if you have set `evaluationExplanations` to true in [[LDOptions]].
+     * Note that this will only work if you have set `evaluationExplanations` to true in [[ULOptions]].
      * Otherwise, the `reason` property of the result will be null.
      *
      * The `reason` property of the result will also be included in analytics events, if you are
      * capturing detailed event data for this flag.
      *
-     * For more information, see the [SDK reference guide](https://docs.launchdarkly.com/docs/evaluation-reasons).
+     * For more information, see the [SDK reference guide](https://docs.unlaunch.com/docs/evaluation-reasons).
      *
      * @param key
      *   The unique key of the feature flag.
      * @param defaultValue
-     *   The default value of the flag, to be used if the value is not available from LaunchDarkly.
+     *   The default value of the flag, to be used if the value is not available from Unlaunch.
      *
      * @returns
-     *   An [[LDEvaluationDetail]] object containing the value and explanation.
+     *   An [[ULEvaluationDetail]] object containing the value and explanation.
      */
-    variationDetail(key: string, defaultValue?: LDFlagValue): LDEvaluationDetail;
-
-    /**
-     * Specifies whether or not to open a streaming connection to LaunchDarkly for live flag updates.
-     *
-     * If this is true, the client will always attempt to maintain a streaming connection; if false,
-     * it never will. If you leave the value undefined (the default), the client will open a streaming
-     * connection if you subscribe to `"change"` or `"change:flag-key"` events (see [[LDClient.on]]).
-     *
-     * This can also be set as the `streaming` property of [[LDOptions]].
-     */
-    setStreaming(value?: boolean): void;
+    variationDetail(key: string, defaultValue?: ULFlagValue): ULEvaluationDetail;
 
     /**
      * Registers an event listener.
@@ -606,35 +536,23 @@ declare module 'launchdarkly-js-sdk-common' {
      * The following event names (keys) are used by the cliet:
      *
      * - `"ready"`: The client has finished starting up. This event will be sent regardless
-     *   of whether it successfully connected to LaunchDarkly, or encountered an error
+     *   of whether it successfully connected to Unlaunch, or encountered an error
      *   and had to give up; to distinguish between these cases, see below.
      * - `"initialized"`: The client successfully started up and has valid feature flag
      *   data. This will always be accompanied by `"ready"`.
      * - `"failed"`: The client encountered an error that prevented it from connecting to
-     *   LaunchDarkly, such as an invalid environment ID. All flag evaluations will
+     *   Unlaunch, such as an invalid environment ID. All flag evaluations will
      *   therefore receive default values. This will always be accompanied by `"ready"`.
      * - `"error"`: General event for any kind of error condition during client operation.
      *   The callback parameter is an Error object. If you do not listen for "error"
      *   events, then the errors will be logged with `console.log()`.
-     * - `"change"`: The client has received new feature flag data. This can happen either
-     *   because you have switched users with [[identify]], or because the client has a
-     *   stream connection and has received a live change to a flag value (see below).
-     *   The callback parameter is an [[LDFlagChangeset]].
-     * - `"change:FLAG-KEY"`: The client has received a new value for a specific flag
-     *   whose key is `FLAG-KEY`. The callback receives two parameters: the current (new)
-     *   flag value, and the previous value. This is always accompanied by a general
-     *   `"change"` event as described above; you can listen for either or both.
-     *
-     * The `"change"` and `"change:FLAG-KEY"` events have special behavior: by default, the
-     * client will open a streaming connection to receive live changes if and only if
-     * you are listening for one of these events. This behavior can be overridden by
-     * setting `streaming` in [[LDOptions]] or calling [[LDClient.setStreaming]].
+        
      *
      * @param key
      *   The name of the event for which to listen.
      * @param callback
      *   The function to execute when the event fires. The callback may or may not
-     *   receive parameters, depending on the type of event; see [[LDEventSignature]].
+     *   receive parameters, depending on the type of event; see [[ULEventSignature]].
      * @param context
      *   The `this` context to use for the callback.
      */
@@ -655,7 +573,7 @@ declare module 'launchdarkly-js-sdk-common' {
     /**
      * Track page events to use in goals or A/B tests.
      *
-     * LaunchDarkly automatically tracks pageviews and clicks that are specified in the
+     * Unlaunch automatically tracks pageviews and clicks that are specified in the
      * Goals section of their dashboard. This can be used to track custom goals or other
      * events that do not currently have goals.
      *
@@ -664,7 +582,7 @@ declare module 'launchdarkly-js-sdk-common' {
      * @param data
      *   Additional information to associate with the event.
      * @param metricValue
-     *   An optional numeric value that can be used by the LaunchDarkly experimentation
+     *   An optional numeric value that can be used by the Unlaunch experimentation
      *   feature in numeric custom metrics. Can be omitted if this event is used by only
      *   non-numeric metrics. This field will also be returned as part of the custom event
      *   for Data Export.
@@ -679,12 +597,12 @@ declare module 'launchdarkly-js-sdk-common' {
      *   Note that there is no way to specify a default value for each flag as there is with
      *   [[variation]], so any flag that cannot be evaluated will have a null value.
      */
-    allFlags(): LDFlagSet;
+    allFlags(): ULFlagSet;
 
    /**
     * Shuts down the client and releases its resources, after delivering any pending analytics
     * events. After the client is closed, all calls to [[variation]] will return default values,
-    * and it will not make any requests to LaunchDarkly.
+    * and it will not make any requests to Unlaunch.
     *
     * @param onDone
     *   A function which will be called when the operation completes. If omitted, you

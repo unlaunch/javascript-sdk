@@ -1,23 +1,23 @@
 {
-  "name": "js-sdk-common",
+  "name": "unlaunch-js-sdk-common",
   "version": "1.0.0",
   "description": "Unlaunch SDK for JavaScript - common code",
   "author": "Unlaunch <unlaunch@gmail.com>",
   "license": "Apache-2.0",
   "files": [
-    "ldclient-common.cjs.js",
-    "ldclient-common.cjs.js.map",
-    "ldclient-common.es.js",
-    "ldclient-common.es.js.map",
-    "ldclient-common.min.js",
-    "ldclient-common.min.js.map",
+    "ulclient-common.cjs.js",
+    "ulclient-common.cjs.js.map",
+    "ulclient-common.es.js",
+    "ulclient-common.es.js.map",
+    "ulclient-common.min.js",
+    "ulclient-common.min.js.map",
     "typings.d.ts"
   ],
   "types": "./typings.d.ts",
-  "main": "dist/ldclient-common.cjs.js",
-  "module": "dist/ldclient-common.es.js",
-  "unpkg": "dist/ldclient-common.min.js",
-  "jsdelivr": "dist/ldclient-common.min.js",
+  "main": "dist/ulclient-common.cjs.js",
+  "module": "dist/ulclient-common.es.js",
+  "unpkg": "dist/ulclient-common.min.js",
+  "jsdelivr": "dist/ulclient-common.min.js",
   "scripts": {
     "lint": "eslint --format 'node_modules/eslint-formatter-pretty' --ignore-path .eslintignore",
     "lint:all": "eslint --format 'node_modules/eslint-formatter-pretty' --ignore-path .eslintignore src",
@@ -76,6 +76,6 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/launchdarkly/js-sdk-common.git"
+    "url": "git://github.com/unlaunch/javascript-sdk-common.git"
   }
 }

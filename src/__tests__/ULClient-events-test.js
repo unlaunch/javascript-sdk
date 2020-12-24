@@ -13,7 +13,7 @@ import { makeBootstrap, numericUser, stringifiedNumericUser } from './testUtils'
 // we're not testing event delivery here, but to simulate the polling service in cases where the test
 // logic involves a flag request. In all other cases we just start the client with bootstrap data.
 
-describe('LDClient events', () => {
+describe('ULClient events', () => {
   const envName = 'UNKNOWN_ENVIRONMENT_ID';
   const user = { key: 'user' };
   const fakeUrl = 'http://fake';

@@ -106,7 +106,7 @@ describe('EventSender', () => {
     });
 
     it('should send custom user-agent header', async () => {
-      const options = { sendLDHeaders: true };
+      const options = { sendULHeaders: true };
       const server = platform.testing.http.newServer();
       server.byDefault(respond(202));
       const sender = EventSender(platform, envId, options);
@@ -119,7 +119,7 @@ describe('EventSender', () => {
     });
 
     it('should send unique payload IDs', async () => {
-      const options = { sendLDHeaders: true };
+      const options = { sendULHeaders: true };
       const server = platform.testing.http.newServer();
       server.byDefault(respond(202));
       const sender = EventSender(platform, envId, options);
@@ -137,7 +137,7 @@ describe('EventSender', () => {
     });
 
     it('should send wrapper info if present', async () => {
-      const options = { sendLDHeaders: true, wrapperName: 'FakeSDK' };
+      const options = { sendULHeaders: true, wrapperName: 'FakeSDK' };
       const server = platform.testing.http.newServer();
       server.byDefault(respond(202));
       const sender = EventSender(platform, envId, options);

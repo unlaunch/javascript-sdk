@@ -4,7 +4,7 @@ import * as utils from './utils';
  * The UserFilter object transforms user objects into objects suitable to be sent as JSON to
  * the server, hiding any private user attributes.
  *
- * @param {Object} the LaunchDarkly client configuration object
+ * @param {Object} the Unlaunch client configuration object
  **/
 export default function UserFilter(config) {
   const filter = {};

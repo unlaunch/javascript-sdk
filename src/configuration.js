@@ -13,12 +13,10 @@ import * as utils from './utils';
 // The extraOptionDefs parameter to validate() uses the same format.
 export const baseOptionDefs = {
   baseUrl: { default: 'https://api-qa.unlaunch.io/api/v1' },
-  streamUrl: { default: 'https://api-qa.unlaunch.io/api/v1' },
   eventsUrl: { default: 'https://api-qa.unlaunch.io/api/v1' },
   offline: {default: false},
   sendEvents: { default: true },
-  streaming: { type: 'boolean' }, // default for this is undefined, which is different from false
-  sendLDHeaders: { default: true },
+  sendULHeaders: { default: true },
   inlineUsersInEvents: { default: false },
   allowFrequentDuplicateEvents: { default: false },
   sendEventsOnlyForVariation: { default: false },
@@ -27,12 +25,7 @@ export const baseOptionDefs = {
   eventCapacity: { default: 100, minimum: 1 },
   flushInterval: { default: 2000, minimum: 2000 },
   samplingInterval: { default: 0, minimum: 0 },
-  streamReconnectDelay: { default: 1000, minimum: 0 },
-  allAttributesPrivate: { default: false },
-  privateAttributeNames: { default: [] },
   bootstrap: { type: 'string|object' },
-  diagnosticRecordingInterval: { default: 900000, minimum: 2000 },
-  diagnosticOptOut: { default: true },
   wrapperName: { type: 'string' },
   wrapperVersion: { type: 'string' },
   stateProvider: { type: 'object' }, // not a public option, used internally
@@ -130,7 +123,7 @@ export function validate(options, emitter, extraOptionDefs, logger) {
 
   function reportArgumentError(message) {
     utils.onNextTick(() => {
-      emitter && emitter.maybeReportError(new errors.LDInvalidArgumentError(message));
+      emitter && emitter.maybeReportError(new errors.ULInvalidArgumentError(message));
     });
   }
 

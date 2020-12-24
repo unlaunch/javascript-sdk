@@ -35,7 +35,7 @@ export function deepEquals(a, b) {
   return fastDeepEqual(a, b);
 }
 
-// Events emitted in LDClient's initialize method will happen before the consumer
+// Events emitted in ULClient's initialize method will happen before the consumer
 // can register a listener, so defer them to next tick.
 export function onNextTick(cb) {
   setTimeout(cb, 0);
@@ -145,28 +145,13 @@ export function chunkUserEventsForUrl(maxLength, events) {
   return allChunks;
 }
 
-export function getLDUserAgentString(platform) {
+export function getULUserAgentString(platform) {
   const version = platform.version || VERSION;
   return platform.userAgent + '/' + version;
 }
 
-export function getLDHeaders(platform, options) {
-  if (options && !options.sendLDHeaders) {
-    return {};
-  }
-  const h = {
-    'X-LaunchDarkly-User-Agent': getLDUserAgentString(platform),
-  };
-  if (options && options.wrapperName) {
-    h['X-LaunchDarkly-Wrapper'] = options.wrapperVersion
-      ? options.wrapperName + '/' + options.wrapperVersion
-      : options.wrapperName;
-  }
-  return h;
-}
-
 export function getULHeaders(platform, options, clientSdkKey) {
-  if (options && !options.sendLDHeaders) {
+  if (options && !options.sendULHeaders) {
     return {};
   }
   const h = {

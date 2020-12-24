@@ -23,7 +23,7 @@ describe('createConsoleLogger', () => {
   it('has default prefix', () => {
     const logger = createConsoleLogger('info');
     logger.info('xyz');
-    expect(infoSpy).toHaveBeenCalledWith('LD: [info] xyz');
+    expect(infoSpy).toHaveBeenCalledWith('UL: [info] xyz');
   });
 
   it('can specify prefix', () => {

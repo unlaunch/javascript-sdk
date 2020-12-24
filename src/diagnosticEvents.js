@@ -71,7 +71,7 @@ function DiagnosticsAccumulator(startTime) {
 
 function DiagnosticsManager(platform, accumulator, eventSender, environmentId, config, diagnosticId) {
   const combinedMode = !!platform.diagnosticUseCombinedEvent;
-  const localStorageKey = 'ld:' + environmentId + ':$diagnostics';
+  const localStorageKey = 'ul:' + environmentId + ':$diagnostics';
   const diagnosticEventsUrl = config.eventsUrl + '/events/diagnostic/' + environmentId;
   const periodicInterval = config.diagnosticRecordingInterval;
   const acc = accumulator;

@@ -7,9 +7,9 @@ const jsonContentType = 'application/json';
 
 function getResponseError(result) {
   if (result.status === 404) {
-    return new errors.LDInvalidEnvironmentIdError(messages.environmentNotFound());
+    return new errors.ULInvalidEnvironmentIdError(messages.environmentNotFound());
   } else {
-    return new errors.LDFlagFetchError(messages.errorFetchingFlags(result.statusText || String(result.status)));
+    return new errors.ULFlagFetchError(messages.errorFetchingFlags(result.statusText || String(result.status)));
   }
 }
 
@@ -27,13 +27,13 @@ export default function Requestor(platform, options, environment) {
     
     if (!platform.httpRequest) {
       return new Promise((resolve, reject) => {
-        reject(new errors.LDFlagFetchError(messages.httpUnavailable()));
+        reject(new errors.ULFlagFetchError(messages.httpUnavailable()));
       });
     }
 
   //  const method = body ? 'REPORT' : 'GET';
     const method = body ? 'POST' : 'GET';
-  //  const headers = utils.getLDHeaders(platform, options);
+  //  const headers = utils.getULHeaders(platform, options);
     const headers = {}
     
     if (body) {
@@ -62,13 +62,13 @@ export default function Requestor(platform, options, environment) {
             return JSON.parse(result.body);
           } else {
             const message = messages.invalidContentType(result.header('content-type') || '');
-            return Promise.reject(new errors.LDFlagFetchError(message));
+            return Promise.reject(new errors.ULFlagFetchError(message));
           }
         } else {
           return Promise.reject(getResponseError(result));
         }
       },
-      e => Promise.reject(new errors.LDFlagFetchError(messages.networkError(e)))
+      e => Promise.reject(new errors.ULFlagFetchError(messages.networkError(e)))
     );
     coalescer.addPromise(p, () => {
       // this will be called if another request for the same endpoint supersedes this one
@@ -83,34 +83,6 @@ export default function Requestor(platform, options, environment) {
     return fetchJSON(baseUrl + path, null);
   };
 
-  // Requests the current state of all flags for the given user from LaunchDarkly. Returns a Promise
-  // which will resolve with the parsed JSON response, or will be rejected if the request failed.
-  requestor.fetchFlagSettings = function(user, hash) {
-    let data;
-    let endpoint;
-    let query = '';
-    let body;
-
-    if (useReport) {
-      endpoint = [baseUrl, '/sdk/evalx/', environment, '/user'].join('');
-      body = JSON.stringify(user);
-    } else {
-      data = utils.base64URLEncode(JSON.stringify(user));
-      endpoint = [baseUrl, '/sdk/evalx/', environment, '/users/', data].join('');
-    }
-    if (hash) {
-      query = 'h=' + hash;
-    }
-    if (withReasons) {
-      query = query + (query ? '&' : '') + 'withReasons=true';
-    }
-    endpoint = endpoint + (query ? '?' : '') + query;
-    logger.debug(messages.debugPolling(endpoint));
-
-    return fetchJSON(endpoint, body);
-  };
-
- 
   requestor.fetchFlagsWithResult = function(user, flagKeys) {
     console.log("evaluate", user, flagKeys);
     let endpoint = [baseUrl, '/evaluate/', environment].join('') + '?evaluationReason=' + options.evaluationReason;

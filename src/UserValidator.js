@@ -10,12 +10,12 @@ import * as utils from './utils';
 // storage if possible.
 // 3. If there is no key (or no user object), return an error.
 
-const ldUserIdKey = 'ld:$anonUserId';
+const ulUserIdKey = 'ul:$anonUserId';
 
 export default function UserValidator(localStorageProvider, logger) {
   function getCachedUserId() {
     if (localStorageProvider) {
-      return localStorageProvider.get(ldUserIdKey).catch(() => null);
+      return localStorageProvider.get(ulUserIdKey).catch(() => null);
       // Not logging errors here, because if local storage fails for the get, it will presumably fail for the set,
       // so we will end up logging an error in setCachedUserId anyway.
     }
@@ -24,7 +24,7 @@ export default function UserValidator(localStorageProvider, logger) {
 
   function setCachedUserId(id) {
     if (localStorageProvider) {
-      return localStorageProvider.set(ldUserIdKey, id).catch(() => {
+      return localStorageProvider.set(ulUserIdKey, id).catch(() => {
         logger.warn(messages.localStorageUnavailableForUserId());
       });
     }
@@ -36,7 +36,7 @@ export default function UserValidator(localStorageProvider, logger) {
   // Validates the user, returning a Promise that resolves to the validated user, or rejects if there is an error.
   ret.validateUser = user => {
     if (!user) {
-      return Promise.reject(new errors.LDInvalidUserError(messages.userNotSpecified()));
+      return Promise.reject(new errors.ULInvalidUserError(messages.userNotSpecified()));
     }
 
     const userOut = utils.clone(user);
@@ -56,7 +56,7 @@ export default function UserValidator(localStorageProvider, logger) {
         }
       });
     } else {
-      return Promise.reject(new errors.LDInvalidUserError(messages.invalidUser()));
+      return Promise.reject(new errors.ULInvalidUserError(messages.invalidUser()));
     }
   };
 

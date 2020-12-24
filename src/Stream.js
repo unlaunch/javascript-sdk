@@ -1,5 +1,5 @@
 import * as messages from './messages';
-import { base64URLEncode, getLDHeaders, objectHasOwnProperty } from './utils';
+import { base64URLEncode, getULHeaders, objectHasOwnProperty } from './utils';
 
 // The underlying event source implementation is abstracted via the platform object, which should
 // have these three properties:
@@ -18,7 +18,7 @@ export default function Stream(platform, config, environment, diagnosticsAccumul
   const useReport = config.useReport;
   const withReasons = config.evaluationReasons;
   const streamReconnectDelay = config.streamReconnectDelay;
-  const headers = getLDHeaders(platform, config);
+  const headers = getULHeaders(platform, config, environment);
   let firstConnectionErrorLogged = false;
   let es = null;
   let reconnectTimeoutReference = null;
@@ -57,7 +57,7 @@ export default function Stream(platform, config, environment, diagnosticsAccumul
 
   function handleError(err) {
     if (!firstConnectionErrorLogged) {
-      logger.warn(messages.streamError(err, streamReconnectDelay));
+    //  logger.warn(messages.streamError(err, streamReconnectDelay));
       firstConnectionErrorLogged = true;
     }
     logConnectionResult(false);
@@ -104,7 +104,7 @@ export default function Stream(platform, config, environment, diagnosticsAccumul
       url = url + (query ? '?' : '') + query;
 
       closeConnection();
-      logger.info(messages.streamConnecting(url));
+    //  logger.info(messages.streamConnecting(url));
       logConnectionStarted();
 
       es = platform.eventSourceFactory(url, options);
@@ -120,7 +120,7 @@ export default function Stream(platform, config, environment, diagnosticsAccumul
 
   function closeConnection() {
     if (es) {
-      logger.info(messages.streamClosing());
+    //  logger.info(messages.streamClosing());
       es.close();
       es = null;
     }

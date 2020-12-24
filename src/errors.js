@@ -12,12 +12,12 @@ function createCustomError(name) {
   return CustomError;
 }
 
-export const LDUnexpectedResponseError = createCustomError('LaunchDarklyUnexpectedResponseError');
-export const LDInvalidEnvironmentIdError = createCustomError('LaunchDarklyInvalidEnvironmentIdError');
-export const LDInvalidUserError = createCustomError('LaunchDarklyInvalidUserError');
-export const LDInvalidEventKeyError = createCustomError('LaunchDarklyInvalidEventKeyError');
-export const LDInvalidArgumentError = createCustomError('LaunchDarklyInvalidArgumentError');
-export const LDFlagFetchError = createCustomError('LaunchDarklyFlagFetchError');
+export const ULUnexpectedResponseError = createCustomError('UnlaunchUnexpectedResponseError');
+export const ULInvalidEnvironmentIdError = createCustomError('UnlaunchInvalidEnvironmentIdError');
+export const ULInvalidUserError = createCustomError('UnlaunchInvalidUserError');
+export const ULInvalidEventKeyError = createCustomError('UnlaunchInvalidEventKeyError');
+export const ULInvalidArgumentError = createCustomError('UnlaunchInvalidArgumentError');
+export const ULFlagFetchError = createCustomError('UnlaunchFlagFetchError');
 
 export function isHttpErrorRecoverable(status) {
   if (status >= 400 && status < 500) {

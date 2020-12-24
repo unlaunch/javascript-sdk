@@ -1,6 +1,5 @@
 import EventSender from './EventSender';
-import EventSummarizer from './EventSummarizer';
-import UserFilter from './UserFilter';
+import VariationCountProcessor from './VariationCountProcessor';
 import * as errors from './errors';
 import * as messages from './messages';
 import * as utils from './utils';
@@ -18,8 +17,7 @@ export default function EventProcessor(
   //const mainEventsUrl = options.eventsUrl + '/events/bulk/' + environmentId;
   const impressionEventsUrl = options.eventsUrl + '/impressions'
   const varCountEventsUrl = options.eventsUrl + '/events'
-  const summarizer = EventSummarizer();
-  const userFilter = UserFilter(options);
+  const variationCountProcessor = VariationCountProcessor();
   const inlineUsers = options.inlineUsersInEvents;
   const samplingInterval = options.samplingInterval;
   const eventCapacity = options.eventCapacity;
@@ -44,23 +42,6 @@ export default function EventProcessor(
       return e.debugEventsUntilDate > lastKnownPastTime && e.debugEventsUntilDate > new Date().getTime();
     }
     return false;
-  }
-
-  // Transform an event from its internal format to the format we use when sending a payload.
-  function makeOutputEvent(e) {
-    const ret = utils.extend({}, e);
-    if (inlineUsers || e.kind === 'identify') {
-      // identify events always have an inline user
-      ret.user = userFilter.filterUser(e.user);
-    } else {
-      ret.userKey = e.user.key;
-      delete ret['user'];
-    }
-    if (e.kind === 'feature') {
-      delete ret['trackEvents'];
-      delete ret['debugEventsUntilDate'];
-    }
-    return ret;
   }
 
   function addToOutbox(event) {
@@ -88,37 +69,13 @@ export default function EventProcessor(
 
     if (event.type === 'IMPRESSION'){
       // aggregate variation counts
-      summarizer.summarizeEvent(event);
+      variationCountProcessor.incrementVariationCount(event);
 
       // added in queue for livetail
       addToOutbox(event);
       return;
     }
 
-    // Add event to the summary counters if appropriate
-    //summarizer.summarizeEvent(event);
-
-    // Decide whether to add the event to the payload. Feature events may be added twice, once for
-    // the event (if tracked) and once for debugging.
-    if (event.kind === 'feature') {
-      if (shouldSampleEvent()) {
-        addFullEvent = !!event.trackEvents;
-        addDebugEvent = shouldDebugEvent(event);
-      }
-    } else {
-      addFullEvent = shouldSampleEvent();
-    }
-
-    if (addFullEvent) {
-      addToOutbox(makeOutputEvent(event));
-    }
-    if (addDebugEvent) {
-      const debugEvent = utils.extend({}, event, { kind: 'debug' });
-      delete debugEvent['trackEvents'];
-      delete debugEvent['debugEventsUntilDate'];
-      delete debugEvent['variation'];
-      addToOutbox(debugEvent);
-    }
   };
 
   processor.flush = function() {
@@ -126,18 +83,7 @@ export default function EventProcessor(
       return Promise.resolve();
     }
     const eventsToSend = queue;
-    // const summary = summarizer.getSummary();
-    // summarizer.clearSummary();
-    // if (summary) {
-    //   summary.kind = 'summary';
-    //   eventsToSend.push(summary);
-    // }
-    // if (diagnosticsAccumulator) {
-    //   // For diagnostic events, we record how many events were in the queue at the last flush (since "how
-    //   // many events happened to be in the queue at the moment we decided to send a diagnostic event" would
-    //   // not be a very useful statistic).
-    //   diagnosticsAccumulator.setEventsInLastBatch(eventsToSend.length);
-    // }
+   
     if (eventsToSend.length === 0) {
       return Promise.resolve();
     }
@@ -154,7 +100,7 @@ export default function EventProcessor(
         if (responseInfo.status >= 400) {
           utils.onNextTick(() => {
             emitter.maybeReportError(
-              new errors.LDUnexpectedResponseError(
+              new errors.ULUnexpectedResponseError(
                 messages.httpErrorMessage(responseInfo.status, 'event posting', 'some events were dropped')
               )
             );
@@ -169,9 +115,9 @@ export default function EventProcessor(
       return Promise.resolve();
     }
     
-    const variationCountEvents = summarizer.getVariationCountEvents();
+    const variationCountEvents = variationCountProcessor.getVariationCountEvents();
    
-    summarizer.clearSummary();
+    variationCountProcessor.clearVariationCount();
   
     if (!variationCountEvents || variationCountEvents.length === 0) {
       return Promise.resolve();
@@ -189,7 +135,7 @@ export default function EventProcessor(
         if (responseInfo.status >= 400) {
           utils.onNextTick(() => {
             emitter.maybeReportError(
-              new errors.LDUnexpectedResponseError(
+              new errors.ULUnexpectedResponseError(
                 messages.httpErrorMessage(responseInfo.status, 'event posting', 'some events were dropped')
               )
             );

@@ -12,10 +12,10 @@ import { makeBootstrap } from './testUtils';
 // EventSource, other SDKs use the js-eventsource polyfill) so these tests use only a mock
 // implementation, verifying that the SDK interacts properly with the stream abstraction.
 
-describe('LDClient streaming', () => {
+describe('ULClient streaming', () => {
   const defaultStreamBaseUrl = 'https://clientstream.launchdarkly.com';
   const envName = 'UNKNOWN_ENVIRONMENT_ID';
-  const lsKey = 'ld:UNKNOWN_ENVIRONMENT_ID:' + utils.btoa('{"key":"user"}');
+  const lsKey = 'ul:UNKNOWN_ENVIRONMENT_ID:' + utils.btoa('{"key":"user"}');
   const user = { key: 'user' };
   const encodedUser = 'eyJrZXkiOiJ1c2VyIn0';
   const hash = '012345789abcde';
