@@ -1,6 +1,5 @@
 import * as common from 'js-sdk-common';
 import browserPlatform from './browserPlatform';
-import GoalManager from './GoalManager';
 
 const goalsEvent = 'goalsReady';
 const extraOptionDefs = {

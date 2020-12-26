@@ -4,7 +4,7 @@ The unlaunch javascript browser-sdk code is available in develop branch. The cli
 
 1. Go to javascript-sdk-common directory and run 'npm install' and then run 'npm run build'
 
-2. Go to javascript-client-sdk directory and run 'npm link path-to-js-sdk-common-dir' 
+2. Go to javascript-sdk-common directory and run `npm link`. Then go to the javascript-client-sdk and type `npm link unlaunch-js-sdk-common`
 
 3. Install javascript-client-sdk dependencies by running 'npm install' and then build 'npm run build'
 

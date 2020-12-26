@@ -10,12 +10,12 @@
     "client"
   ],
   "files": [
-    "ulclient.cjs.js",
-    "ulclient.cjs.js.map",
-    "ulclient.es.js",
-    "ulclient.es.js.map",
-    "ulclient.min.js",
-    "ulclient.min.js.map",
+    "ulclient-common.cjs.js",
+    "ulclient-common.cjs.js.map",
+    "ulclient-common.es.js",
+    "ulclient-common.es.js.map",
+    "ulclient-common.min.js",
+    "ulclient-common.min.js.map",
     "typings.d.ts"
   ],
   "types": "./typings.d.ts",
@@ -80,8 +80,8 @@
   },
   "dependencies": {
     "escape-string-regexp": "^1.0.5",
-    "js-sdk-common": "file:../js-sdk-common",
-    "unlaunch-js-sdk-common": "file:../js-sdk-common"
+    "js-sdk-common": "file:../javascript-sdk-common",
+    "unlaunch-js-sdk-common": "file:../javascript-sdk-common"
   },
   "repository": {
     "type": "git",
