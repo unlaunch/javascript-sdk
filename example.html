@@ -1,13 +1,18 @@
 <html>
 
 <head>
-    <title>Javascript SDK example</title>
-    <script src="./dist/ulclient.min.js"></script>
+    <title>Unlaunch Javascript SDK example</title>
+    
 </head>
 
 <body>
+    <h1>Unlaunch Javascript SDK Example HTML</h1>
+
+    <script src="./dist/ulclient.min.js"></script>
     <script>
-        let flagKeys = ["js-flag"];
+        const flagKey = 'distribution-flag';
+
+        let flagKeys = [flagKey];
         let identity = 'user123';
 
         let attributes = {
@@ -20,30 +25,23 @@
             offline: true,
         }
 
-        let ulclient = ULClient.initialize('test-client-*************', flagKeys, identity, attributes, options);
-
-        console.log('ff')
-        console.log(ulclient);
+        let ulclient = ULClient.initialize('prod-client-b7691b4c-8f00-43f4-9ca4-c7026878478a', flagKeys, identity, attributes, options);
 
         ulclient.on('ready', function() {
-            let jsFlag = ulclient.variation("js-flag");
+            let variation = ulclient.variation(flagKey);
 
-            if (jsFlag == 'on') {
-
-                console.log("Hello. Js Flag is on");
+            if (variation === 'on') {
+                console.log(`Variation for '${flagKey}' is on`);
+            } else if (variation === 'on') {
+                console.log(`Variation for '${flagKey}' is off`);
 
             } else {
-
-                console.log("Hello. Js Flag is off");
-
+                console.log(`Error. Variation for '${flagKey}' is '${variation}'`);
             }
         });
-
-
-
-
-
     </script>
+
+
 </body>
 
 </html>

@@ -104,7 +104,6 @@ export default function makeBrowserPlatform(options) {
       // timeout properties that are used by several popular polyfills.
       // Also, the skipDefaultHeaders property (if supported) tells the polyfill not to add the
       // Cache-Control header that can cause CORS problems in browsers.
-      // See: https://github.com/launchdarkly/js-eventsource
       const defaultOptions = {
         heartbeatTimeout: timeoutMillis,
         silentTimeout: timeoutMillis,

@@ -1,6 +1,6 @@
 function isSyncXhrSupported() {
   // This is temporary logic to disable synchronous XHR in Chrome 73 and above. In all other browsers,
-  // we will assume it is supported. See https://github.com/launchdarkly/js-client-sdk/issues/147
+  // we will assume it is supported. See 
   const userAgent = window.navigator && window.navigator.userAgent;
   if (userAgent) {
     const chromeMatch = userAgent.match(/Chrom(e|ium)\/([0-9]+)\./);
