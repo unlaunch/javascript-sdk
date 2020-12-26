@@ -6,16 +6,16 @@
   "license": "Apache-2.0",
   "keywords": [
     "unlaunch",
-    "analytics",
-    "client"
+    "feature flags",
+    "javascript"
   ],
   "files": [
-    "ulclient-common.cjs.js",
-    "ulclient-common.cjs.js.map",
-    "ulclient-common.es.js",
-    "ulclient-common.es.js.map",
-    "ulclient-common.min.js",
-    "ulclient-common.min.js.map",
+    "ulclient.cjs.js",
+    "ulclient.cjs.js.map",
+    "ulclient.es.js",
+    "ulclient.es.js.map",
+    "ulclient.min.js",
+    "ulclient.min.js.map",
     "typings.d.ts"
   ],
   "types": "./typings.d.ts",

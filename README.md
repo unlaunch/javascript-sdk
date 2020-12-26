@@ -68,7 +68,7 @@ ulclient.on('ready', function() {
     console.log("Hello. Js Flag is off");
 
   }
-);
+});
 ```
 12. To get variation configuration use variantConfig method
 

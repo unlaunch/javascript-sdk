@@ -44,7 +44,7 @@ const configs = [
     input: entryPoint,
     output: {
       name: 'ULClient',
-      file: process.env.NODE_ENV === 'production' ? './dist/ulclient-common.min.js' : './dist/ulclient-common.js',
+      file: process.env.NODE_ENV === 'production' ? './dist/ulclient.min.js' : './dist/ulclient.js',
       format: 'umd',
       sourcemap: true,
     },

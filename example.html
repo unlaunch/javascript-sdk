@@ -1,0 +1,49 @@
+<html>
+
+<head>
+    <title>Javascript SDK example</title>
+    <script src="./dist/ulclient.min.js"></script>
+</head>
+
+<body>
+    <script>
+        let flagKeys = ["js-flag"];
+        let identity = 'user123';
+
+        let attributes = {
+            "country": "US"
+        };
+
+        var options = {
+            bootstrap: 'localstorage',
+            evaluationReason: true,
+            offline: true,
+        }
+
+        let ulclient = ULClient.initialize('test-client-*************', flagKeys, identity, attributes, options);
+
+        console.log('ff')
+        console.log(ulclient);
+
+        ulclient.on('ready', function() {
+            let jsFlag = ulclient.variation("js-flag");
+
+            if (jsFlag == 'on') {
+
+                console.log("Hello. Js Flag is on");
+
+            } else {
+
+                console.log("Hello. Js Flag is off");
+
+            }
+        });
+
+
+
+
+
+    </script>
+</body>
+
+</html>
