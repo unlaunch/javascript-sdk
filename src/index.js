@@ -1,4 +1,4 @@
-import * as common from 'js-sdk-common';
+import * as common from 'unlaunch-js-client-common';
 import browserPlatform from './browserPlatform';
 
 const goalsEvent = 'goalsReady';
