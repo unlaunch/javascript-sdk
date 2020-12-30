@@ -12,10 +12,10 @@ The unlaunch javascript browser-sdk code is available in develop branch. The cli
 
 5. In your project directory run 'npm install'
 
-6. Import unlaunch-js-client-sdk in your project
+6. Import unlaunch-js-client-lib in your project
 
 ```javascript
-import * as ULClient from "unlaunch-js-client-sdk";
+import * as ULClient from "unlaunch-js-client-lib";
 ```
 7. Define flagkeys in array to pass it to the initliaze method.  
 
@@ -33,12 +33,18 @@ let attributes = {
   "country": "US"
 };
 ```
+To define user as anonymous set identity value to 'anonymous' or ''. The library will assign a unique id to user , and the id will remain constant across browser sessions
 
-9. Create options object to pass optional properties in initialize method. The options object can take properties like evaluationReason, offline, bootstrap
+```
+let identity = 'anonymous'
+
+```
+
+9. Create options object to pass optional properties in initialize method. The options object can take properties like host, evaluationReason, offline, bootstrap
  
 ```javascript
 var options = {
-
+  host: 'https://api.unlaunch.io/api/v1',
   bootstrap: 'localstorage',
   evaluationReason: true,
   offline: true
@@ -70,8 +76,21 @@ ulclient.on('ready', function() {
   }
 });
 ```
-12. To get variation configuration use variantConfig method
+12. To get evaluation reason and status use variationDetail method. This will return a json object 
+```
+let detail = ulclient.variationDetail("js-flag");
+```
+ Below is the detail object returned in response 
+```
+{
+      value: result,
+      status: flagStatus,
+      reason: evaluationReason
+};
+```
+
+13. To get variation configuration use variantConfig method
 
 ```javascript
-let varConf = ulclient.variantConfig("js-flag");
+let varConf = ulclient.variationConfiguration("js-flag");
 ```
