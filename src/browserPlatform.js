@@ -11,7 +11,7 @@ export default function makeBrowserPlatform(options) {
     ret.httpRequest = (method, url, headers, body) => {
       const syncFlush = ret.synchronousFlush & !disableSyncFlush;
       ret.synchronousFlush = false;
-      return newHttpRequest(method, url, headers, body, syncFlush);
+      return newHttpRequest(method, url, headers, body, syncFlush, options.requestTimeoutInMillis);
     };
   }
 

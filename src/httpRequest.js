@@ -14,7 +14,7 @@ function isSyncXhrSupported() {
 
 const emptyResult = { promise: Promise.resolve({ status: 200, header: () => null, body: null }) };
 
-export default function newHttpRequest(method, url, headers, body, pageIsClosing) {
+export default function newHttpRequest(method, url, headers, body, pageIsClosing, requestTimeoutInMillis) {
   if (pageIsClosing) {
     // When the page is about to close, we have to use synchronous XHR (until we migrate to sendBeacon).
     // But not all browsers support this.
@@ -36,6 +36,7 @@ export default function newHttpRequest(method, url, headers, body, pageIsClosing
     return emptyResult; // Again, we never want a request to be retried in this case, so we must say it succeeded.
   } else {
     let cancelled;
+    xhr.timeout = requestTimeoutInMillis;
     const p = new Promise((resolve, reject) => {
       xhr.addEventListener('load', () => {
         if (cancelled) {
@@ -52,6 +53,12 @@ export default function newHttpRequest(method, url, headers, body, pageIsClosing
           return;
         }
         reject(new Error());
+      });
+      xhr.addEventListener('timeout', () => {
+        if (cancelled) {
+          return;
+        }
+        reject(new Error(`Request is timeout in ${requestTimeoutInMillis} milliseconds`));
       });
       xhr.send(body);
     });
