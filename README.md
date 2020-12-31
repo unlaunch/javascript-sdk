@@ -47,7 +47,8 @@ var options = {
   host: 'https://api.unlaunch.io/api/v1',
   bootstrap: 'localstorage',
   evaluationReason: true,
-  offline: true
+  offline: false,
+  requestTimeoutInMillis: 3000
 
 }
 ```
