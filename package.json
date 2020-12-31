@@ -1,6 +1,6 @@
 {
   "name": "unlaunch-js-client-lib",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "Unlaunch browser javaScript library",
   "author": "Unlaunch <unlaunch@gmail.com>",
   "license": "Apache-2.0",
@@ -79,7 +79,7 @@
   },
   "dependencies": {
     "escape-string-regexp": "^1.0.5",
-    "unlaunch-js-client-common": "^0.0.1"
+    "unlaunch-js-client-common": "~0.0.3"
   },
   "repository": {
     "type": "git",
