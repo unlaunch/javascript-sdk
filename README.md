@@ -1,97 +1,134 @@
-### javascript-sdk
+## Unlaunch JavaScript Library
+The Unlaunch JavaScript Library provides JavaScript API to access Unlaunch feature flags and other features. Using this library, you can easily build JavaScript apps that can evaluate feature flags, dynamic configurations, and more.
 
-The unlaunch javascript browser-sdk code is available in develop branch. The client has dependency in javascript-sdk-common project which can be downloaded from https://github.com/unlaunch/javascript-sdk-common develop branch. After downloading the code from both repos follow below steps
+### Important Links
 
-1. Go to javascript-sdk-common directory and run 'npm install' and then run 'npm run build'
+- To create feature flags to use with JavaScript Library, login to your Unlaunch Console at [https://app.unlaunch.io](https://app.unlaunch.io)
+- [Official Guide - Read this first](https://docs.unlaunch.io/docs/sdks/javascript-library)
+- [npmjs](https://www.npmjs.com/package/unlaunch-js-client-libk)
 
-2. Go to javascript-sdk-common directory and run `npm link`. Then go to the javascript-client-sdk and type `npm link unlaunch-js-sdk-common`
+### Compatibility
+The Unlaunch JavaScript library doesn't require or depend on any specific JavaScript framework. You can use it with your favorite framework like Angular. If you want to integrate with React, we have a separate React SDK available.
 
-3. Install javascript-client-sdk dependencies by running 'npm install' and then build 'npm run build'
+### Browser Support
+The Unlaunch Javascript Library can be used in all major browsers. However, some browsers may not support some features that the library uses, such as ES6 Promises. You may have to use polyfill if your target users use browsers that do not support ES6 Promise.
 
-4. Go to your project directory and run 'npm link path-to-js-client-sdk-dir'
+## Getting Started
+Here is a simple example. 
 
-5. In your project directory run 'npm install'
+First, add the library to your project. To load the JavaScript Library, include the following in the <head> or <body> tag of your webpage.
 
-6. Import unlaunch-js-client-lib in your project
+## Embed directly in your HTML
+```javascript
+<script crossorigin="anonymous" src="https://unpkg.com/unlaunch-js-client-lib@0.0.7">
+</script>
+```
+
+## Integrate with a JavaScript framework
+Or using, `npm install`:
+
+```
+npm i unlaunch-js-client-lib
+```
+
+and then,
 
 ```javascript
 import * as ULClient from "unlaunch-js-client-lib";
 ```
-7. Define flagkeys in array to pass it to the initliaze method.  
+
+Here's how you'd use JavaScript library in an HTML page.
 
 ```javascript
-let flagKeys = ["js-flag"];
+const flag = 'new-login-form-flag'
+const apiKey = '<PROVIDE_BROWSER_PUBLIC_KEY_FOR_YOUR_PROJECT>'
+const identity = 'anonymous' // Use special anonymous identity which generates a unique UUID
+
+const options = {
+    bootstrap: 'localstorage', // Use local storage
+    evaluationReason: true,
+}
+
+const ulclient = ULClient.initialize(
+    apiKey,
+    [flag],
+    identity,
+    null,
+    options
+);
+
+ulclient.on('ready', function () {
+
+let variation = ulclient.variation(flag);
+console.log(`[UL] Variation is ${variation}`)
+
+const details = ulclient.variationDetail(flag);
+console.log(`[UL] Evaluation reason is ${details.reason}`)
+
+
+if (variation === 'on') {
+    // Show the feature
+} else {
+    // Hide the feature
+}
+
+let config = ulclient.variationConfiguration(flag)
+console.log(config)
+});
+
+
 ```
 
-8. Declare identity property and create attributes object to pass it to the initliaze method.  
+For more information, see the [official guide](https://docs.unlaunch.io/docs/sdks/javascript-library).
 
-```javascript
-let identity = 'user123';
+## Build instructions
 
-let attributes = {
- 
-  "country": "US"
-};
-```
-To define user as anonymous set identity value to 'anonymous' or ''. The library will assign a unique id to user , and the id will remain constant across browser sessions
+### Requirements
+- npm version 6.14.5 or higher
+- node version 12.18.2 or higher
 
-```
-let identity = 'anonymous'
+The library has dependency in [javascript-sdk-common](https://github.com/unlaunch/javascript-sdk-common) project. After cloning both the repos, follow these steps.
 
-```
+1. Go to `javascript-sdk-common` directory and run `npm install` and then run `npm run build`
+2. Go to `javascript-sdk-common` directory and run `npm link`. Then go to the `javascript-client-sd`k and type `npm link unlaunch-js-sdk-common`
+3. Install `javascript-client-sdk` dependencies by running `npm install` and then build `npm run build`
+4. Go to your project directory and run `npm link <path-to-js-client-sdk-directory>`
+5. In your project directory run `npm install`
+6. Import `unlaunch-js-client-lib` in your project or use the minified JavaScript library.
 
-9. Create options object to pass optional properties in initialize method. The options object can take properties like host, evaluationReason, offline, bootstrap
- 
+## Customization
+
+You can use options to customize the client. For more information, see the [official guide](https://docs.unlaunch.io/docs/sdks/javascript-library#client-configuration).
+
 ```javascript
 var options = {
-  host: 'https://api.unlaunch.io/api/v1',
-  bootstrap: 'localstorage',
-  evaluationReason: true,
-  offline: false,
-  requestTimeoutInMillis: 3000
-
+     bootstrap: 'localstorage',
+     evaluationReason: true,
+     offline: false,
+     requestTimeoutInMillis: 1000
 }
 ```
 
-10. Provide browser-client-id that starts with 'test-client' as first argument in initialize and other arguments
+### Offline Mode
 
-```javascript
-let ulclient = ULClient.initialize('test-client-*************', flagKeys, identity , attributes, options);
-```
+You can start the SDK in offline mode for testing purposes. In offline mode, flags aren't downloaded from the server and no data is sent. All calls to `variation()` or its variants will return `control`. Read more in the [official guide](https://docs.unlaunch.io/docs/sdks/javascript-library#offline).
+ 
 
-11. Wait for the client to get ready. Use variation method to get the variation
+## Contributing
+Please see [CONTRIBUTING](CONTRIBUTING.md) to find how you can contribute.
 
-```javascript
-ulclient.on('ready', function() {
-  
-  let jsFlag = ulclient.variation("js-flag");
-  
-  if (jsFlag == 'on') {
-    
-    console.log("Hello. Js Flag is on");
-    
-  } else {
-  
-    console.log("Hello. Js Flag is off");
+## License
+Licensed under the Apache License, Version 2.0. See: [Apache License](LICENSE.md).
 
-  }
-});
-```
-12. To get evaluation reason and status use variationDetail method. This will return a json object 
-```
-let detail = ulclient.variationDetail("js-flag");
-```
- Below is the detail object returned in response 
-```
-{
-      value: result,
-      status: flagStatus,
-      reason: evaluationReason
-};
-```
+## Publish Releases on npmjs
+<TODO>
 
-13. To get variation configuration use variantConfig method
+## About Unlaunch
+Unlaunch is a Feature Release Platform for engineering teams. Our mission is allow engineering teams of all
+sizes to release features safely and quickly to delight their customers. To learn more about Unlaunch, please visit
+[www.unlaunch.io](www.unlaunch.io). You can sign up to get started for free at [https://app.unlaunch.io/signup
+](https://app.unlaunch.io/signup).
 
-```javascript
-let varConf = ulclient.variationConfiguration("js-flag");
-```
+
+## More Questions?
+At Unlaunch, we are obsessed about making it easier for developers all over the world to release features safely and with confidence. If you have *any* questions or something isn't working as expected, please email **unlaunch@gmail.com**.

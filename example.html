@@ -8,39 +8,7 @@
 <body>
     <h1>Unlaunch Javascript SDK Example HTML</h1>
 
-    <script src="./dist/ulclient.min.js"></script>
-    <script>
-        const flagKey = 'distribution-flag';
-
-        let flagKeys = [flagKey];
-        let identity = 'user123';
-
-        let attributes = {
-            "country": "US"
-        };
-
-        var options = {
-            bootstrap: 'localstorage',
-            evaluationReason: true,
-            offline: true,
-        }
-
-        let ulclient = ULClient.initialize('prod-client-b7691b4c-8f00-43f4-9ca4-c7026878478a', flagKeys, identity, attributes, options);
-
-        ulclient.on('ready', function() {
-            let variation = ulclient.variation(flagKey);
-
-            if (variation === 'on') {
-                console.log(`Variation for '${flagKey}' is on`);
-            } else if (variation === 'on') {
-                console.log(`Variation for '${flagKey}' is off`);
-
-            } else {
-                console.log(`Error. Variation for '${flagKey}' is '${variation}'`);
-            }
-        });
-    </script>
-
+    <a href="https://github.com/unlaunch/hello-javascript-browser-library">Please click here for the example project</a>
 
 </body>
 
