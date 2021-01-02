@@ -5,7 +5,7 @@ The Unlaunch JavaScript Library provides JavaScript API to access Unlaunch featu
 
 - To create feature flags to use with JavaScript Library, login to your Unlaunch Console at [https://app.unlaunch.io](https://app.unlaunch.io)
 - [Official Guide - Read this first](https://docs.unlaunch.io/docs/sdks/javascript-library)
-- [npmjs](https://www.npmjs.com/package/unlaunch-js-client-libk)
+- [npmjs](https://www.npmjs.com/package/unlaunch-js-client-lib)
 
 ### Compatibility
 The Unlaunch JavaScript library doesn't require or depend on any specific JavaScript framework. You can use it with your favorite framework like Angular. If you want to integrate with React, we have a separate React SDK available.
@@ -120,7 +120,7 @@ TODO
 ## About Unlaunch
 Unlaunch is a Feature Release Platform for engineering teams. Our mission is allow engineering teams of all
 sizes to release features safely and quickly to delight their customers. To learn more about Unlaunch, please visit
-[www.unlaunch.io](www.unlaunch.io). You can sign up to get started for free at [https://app.unlaunch.io/signup
+[www.unlaunch.io](https://unlaunch.io). You can sign up to get started for free at [https://app.unlaunch.io/signup
 ](https://app.unlaunch.io/signup).
 
 
