@@ -10,7 +10,7 @@ The Unlaunch JavaScript Library provides JavaScript API to access Unlaunch featu
 ### Compatibility
 The Unlaunch JavaScript library doesn't require or depend on any specific JavaScript framework. You can use it with your favorite framework like Angular. If you want to integrate with React, we have a separate React SDK available.
 
-### Browser Support
+#### Browser Support
 The Unlaunch Javascript Library can be used in all major browsers. However, some browsers may not support some features that the library uses, such as ES6 Promises. You may have to use polyfill if your target users use browsers that do not support ES6 Promise.
 
 ## Getting Started
@@ -18,13 +18,13 @@ Here is a simple example.
 
 First, add the library to your project. To load the JavaScript Library, include the following in the <head> or <body> tag of your webpage.
 
-## Embed directly in your HTML
+### Embed directly in your HTML
 ```javascript
 <script crossorigin="anonymous" src="https://unpkg.com/unlaunch-js-client-lib@0.0.7">
 </script>
 ```
 
-## Integrate with a JavaScript framework
+### Integrate with a JavaScript framework
 Or using, `npm install`:
 
 ```
@@ -40,7 +40,7 @@ import * as ULClient from "unlaunch-js-client-lib";
 Here's how you'd use JavaScript library in an HTML page.
 
 ```javascript
-const flag = 'new-login-form-flag'
+const flag = '<YOUR_FLAG_KEY>'
 const apiKey = '<PROVIDE_BROWSER_PUBLIC_KEY_FOR_YOUR_PROJECT>'
 const identity = 'anonymous' // Use special anonymous identity which generates a unique UUID
 
@@ -71,12 +71,6 @@ if (variation === 'on') {
 } else {
     // Hide the feature
 }
-
-let config = ulclient.variationConfiguration(flag)
-console.log(config)
-});
-
-
 ```
 
 For more information, see the [official guide](https://docs.unlaunch.io/docs/sdks/javascript-library).
@@ -121,7 +115,7 @@ Please see [CONTRIBUTING](CONTRIBUTING.md) to find how you can contribute.
 Licensed under the Apache License, Version 2.0. See: [Apache License](LICENSE.md).
 
 ## Publish Releases on npmjs
-<TODO>
+TODO
 
 ## About Unlaunch
 Unlaunch is a Feature Release Platform for engineering teams. Our mission is allow engineering teams of all
