@@ -45,8 +45,8 @@ const apiKey = '<PROVIDE_BROWSER_PUBLIC_KEY_FOR_YOUR_PROJECT>'
 const identity = 'anonymous' // Use special anonymous identity which generates a unique UUID
 
 const options = {
-    bootstrap: 'localstorage', // Use local storage
-    evaluationReason: true,
+    localStorage: true // Use local storage
+    
 }
 
 const ulclient = ULClient.initialize(
@@ -96,8 +96,7 @@ You can use options to customize the client. For more information, see the [offi
 
 ```javascript
 var options = {
-     bootstrap: 'localstorage',
-     evaluationReason: true,
+     localStorage: true,
      offline: false,
      requestTimeoutInMillis: 1000
 }
