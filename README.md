@@ -90,6 +90,10 @@ The library has dependency in [javascript-sdk-common](https://github.com/unlaunc
 5. In your project directory run `npm install`
 6. Import `unlaunch-js-client-lib` in your project or use the minified JavaScript library.
 
+### Publish to npm
+- npm login
+- npm publish
+
 ## Customization
 
 You can use options to customize the client. For more information, see the [official guide](https://docs.unlaunch.io/docs/sdks/javascript-library#client-configuration).
