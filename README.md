@@ -45,8 +45,12 @@ const apiKey = '<PROVIDE_BROWSER_PUBLIC_KEY_FOR_YOUR_PROJECT>'
 const identity = 'anonymous' // Use special anonymous identity which generates a unique UUID
 
 const options = {
-    localStorage: true // Use local storage
-    
+    localStorage: true, // Use local storage
+    logLevel: 'debug'   // Available logLevels are ['error','warn','info','debug','none']. Default logLevel is 'error'. To disable logging use 'none'. If empty ''            
+                        // loglevel is provided all logs are printed. 
+                        // Log levels severity are in the order ['error','warn','info','debug']. Error has high severity and debug has lowest.
+                        // All logs which have high severity level then the level provided will be printed. So if logLevel info is selected 'error', 'warn' and 
+                        // 'info' logs are printed. If 'debug' is provided only debug logs are printed.   
 }
 
 const ulclient = ULClient.initialize(
