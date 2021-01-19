@@ -1,4 +1,11 @@
-## Unlaunch JavaScript Library
+# Unlaunch JavaScript Library
+
+| main                                                                                                                | develop                                                                                                                |
+|---------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------|
+| [![Build Status](https://travis-ci.com/unlaunch/javascript-sdk.svg?branch=main)](https://travis-ci.com/unlaunch/javascript-sdk) | [![Build Status](https://travis-ci.com/unlaunch/javascript-sdk.svg?branch=develop)](https://travis-ci.com/unlaunch/javascript-sdk) |
+
+
+## Overview
 The Unlaunch JavaScript Library provides JavaScript API to access Unlaunch feature flags and other features. Using this library, you can easily build JavaScript apps that can evaluate feature flags, dynamic configurations, and more.
 
 ### Important Links
