@@ -20,7 +20,7 @@ First, add the library to your project. To load the JavaScript Library, include 
 
 ### Embed directly in your HTML
 ```javascript
-<script crossorigin="anonymous" src="https://unpkg.com/unlaunch-js-client-lib@0.0.7">
+<script crossorigin="anonymous" src="https://unpkg.com/unlaunch-js-client-lib">
 </script>
 ```
 

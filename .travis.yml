@@ -1,0 +1,22 @@
+language: node_js
+
+node_js:
+  - "stable"
+
+cache:
+  npm: true
+
+env:
+  CI: false
+
+install:
+  - npm install
+
+before_script:
+    
+#  - npm test TODO: It is important that we enable this
+script:
+  - npm run build
+
+notifications:
+  slack: crovate:QnF0NqS4HWq69w3HbnaGw777
